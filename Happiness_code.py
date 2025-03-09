@@ -9,7 +9,7 @@ df_clean = pd.read_csv("df_clean.csv")
 
 st.title("Project: World Happiness")
 st.sidebar.title("Table of contents")
-pages=["Project Description","Presentation of Data", "Data Vizualization", "Modelling"]
+pages=["Project Description","Presentation of Data", "Data Vizualization", "Modelling", "Retrained Model"]
 page=st.sidebar.radio("Go to", pages)
 
 import matplotlib.pyplot as plt
@@ -970,16 +970,13 @@ if page == pages[3] :
         f"Train MSE: {mse_rf_train:.4f}, Test MSE: {mse_rf_test:.4f}, "
         f"Train R²: {r2_rf_train:.4f}, Test R²: {r2_rf_test:.4f}")
 
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LinearRegression
 
-
-
-
-
-        
-        
-
-
-
-
-
-
+if page == pages[4] : 
+  st.write("") 
+  st.write("") 
+  st.markdown("<h3 style='color: #6E66CC;'>Retrained Model</h3>", unsafe_allow_html=True)
+  
