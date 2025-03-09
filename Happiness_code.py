@@ -54,6 +54,51 @@ region_colors = {
 
 if page == pages[0] : 
   st.markdown("<h3 style='color: #6E66CC;'>Project Description</h3>", unsafe_allow_html=True)
+  import streamlit as st
+
+  st.markdown("""
+  ## 🤔 A Single Factor or the Interplay of Many?
+
+  How happy is our society – and is happiness measurable?  
+  Various indicators help describe both the **subjective** and **objective** well-being of individuals and societies.  
+
+  But which country is **truly the happiest**?  
+  Can we identify differences based on **prosperity, social environment, or political conditions**?  
+
+  Is happiness shaped by **individual factors alone**, or is it the result of a complex **interplay of multiple influences**?
+  """)
+
+  st.markdown(" ")  # This adds an empty line as a break.
+  st.markdown(" ")  # This adds an empty line as a break.
+  
+  st.markdown("""
+              ### 📌 Project Description  
+              This project analyzes global happiness trends based on data from the **World Happiness Report**. 
+              It explores factors like:  
+              - 🌍 **GDP per capita**  
+              - 👨‍👩‍👧‍👦 **Social Support**  
+              - ❤️ **Life Expectancy**  
+              - 🗽 **Freedom to Make Choices**  
+              - 💖 **Generosity**  
+              - 🚨 **Perception of Corruption**  
+              - 😊 **Positive Affect**  
+              - 😞 **Negative Affect**
+              """)
+  
+         
+  st.write("") 
+  st.write("")
+  st.write("") 
+ 
+  st.markdown("""          
+              
+              📊 We explored the data across various dimensions, such as:
+              - 🌐 **By Continent**
+              - 🗺️ **By Region**
+              - 🌎 **By Country**
+              - 📅 **By Year**
+              The goal is to identify patterns that influence happiness across different countries and continents.
+              """)
 
 if page == pages[1] : 
   st.markdown("<h3 style='color: #6E66CC;'>Presentation of Data</h3>", unsafe_allow_html=True)
