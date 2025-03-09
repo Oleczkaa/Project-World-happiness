@@ -704,11 +704,18 @@ if page == pages[3] :
 
   from sklearn.linear_model import LinearRegression
   from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-
-  # Train the Linear Regression model on the encoded data
-  linear_model = LinearRegression()
-  linear_model.fit(X_train_encoded, y_train)  # Use X_train_encoded
-
+  import joblib
+  
+  # # Train the Linear Regression model on the encoded data
+  # linear_model = LinearRegression()
+  # linear_model.fit(X_train_encoded, y_train)  # Use X_train_encoded
+  
+  # # Save the trained model using joblib
+  
+  # joblib.dump(linear_model, 'linear_model.pkl')  # Save the model to a file
+  # print("Model saved successfully!")
+  
+  linear_model = joblib.load('linear_model.pkl')
   # Predict and evaluate on the encoded test data
   y_pred_linear_test = linear_model.predict(X_test_encoded)  # Use X_test_encoded
 
