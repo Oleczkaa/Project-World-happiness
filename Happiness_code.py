@@ -3,13 +3,14 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import joblib
 
 df_all = pd.read_csv("df_all.csv")
 df_clean = pd.read_csv("df_clean.csv")
 
 st.title("Project: World Happiness")
 st.sidebar.title("Table of contents")
-pages=["Project Description","Presentation of Data", "Data Vizualization", "Modelling", "Retrained Model"]
+pages=["Project Description","Presentation of Data", "Data Vizualization", "Modelling"]
 page=st.sidebar.radio("Go to", pages)
 
 import matplotlib.pyplot as plt
@@ -707,15 +708,15 @@ if page == pages[3] :
   import joblib
   
   # # Train the Linear Regression model on the encoded data
-  # linear_model = LinearRegression()
-  # linear_model.fit(X_train_encoded, y_train)  # Use X_train_encoded
+  #linear_model = LinearRegression(fit_intercept=True)
+  #linear_model.fit(X_train_encoded, y_train)  # Use X_train_encoded
   
   # # Save the trained model using joblib
   
-  # joblib.dump(linear_model, 'linear_model.pkl')  # Save the model to a file
-  # print("Model saved successfully!")
+  #joblib.dump(linear_model, 'newest_linear_model.pkl')  # Save the model to a file
+  #print("Model saved successfully!")
   
-  linear_model = joblib.load('linear_model.pkl')
+  linear_model = joblib.load('newest_linear_model.pkl')
   # Predict and evaluate on the encoded test data
   y_pred_linear_test = linear_model.predict(X_test_encoded)  # Use X_test_encoded
 
@@ -975,8 +976,3 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression
 
-if page == pages[4] : 
-  st.write("") 
-  st.write("") 
-  st.markdown("<h3 style='color: #6E66CC;'>Retrained Model</h3>", unsafe_allow_html=True)
-  
