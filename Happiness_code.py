@@ -784,6 +784,14 @@ if page == pages[3] :
   decision_tree_model = DecisionTreeRegressor(random_state=42, max_depth=3)
   decision_tree_model.fit(X_train_encoded, y_train)
 
+  # Save the trained model using joblib
+  #joblib.dump(decision_tree_model, 'decision_tree_model.pkl')  # Save the model to a file
+  #print("Model saved successfully!")
+  
+  #Load the saved model
+  decision_tree_model = joblib.load('decision_tree_model.pkl')
+  
+  
   # Predict using the encoded test data
   y_pred_tree_test = decision_tree_model.predict(X_test_encoded)
 
