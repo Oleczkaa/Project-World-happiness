@@ -783,16 +783,16 @@ if page == pages[3] :
 
   #comment out the code below so the model does not retrain
 
-  # Train the Decision Tree model with a limited max depth (e.g., max_depth=3)
-  #decision_tree_model = DecisionTreeRegressor(random_state=42, max_depth=3)
+  # Train the Decision Tree model with a limited max depth 
+  #decision_tree_model = DecisionTreeRegressor(random_state=42, max_depth=5, min_samples_leaf=10, min_samples_split=2)
   #decision_tree_model.fit(X_train_encoded, y_train)
 
   # Save the trained model using joblib
-  #joblib.dump(decision_tree_model, 'decision_tree_model.pkl')  # Save the model to a file
+  #joblib.dump(decision_tree_model, 'newest_decision_tree_model.pkl')  # Save the model to a file
   #print("Model saved successfully!")
   
   #Load the saved model
-  decision_tree_model = joblib.load('decision_tree_model.pkl')
+  decision_tree_model = joblib.load('newest_decision_tree_model.pkl')
   
   
   # Predict using the encoded test data
@@ -840,7 +840,7 @@ if page == pages[3] :
             filled=True,
             rounded=True,
             fontsize=12)
-  plt.title("Simplified Decision Tree Visualization (Max Depth = 3)")
+  plt.title("Simplified Decision Tree Visualization")
   st.pyplot(plt)
 
   #Start training RandomForest
