@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from io import BytesIO
 import requests
+import streamlit as st
 
 
 
@@ -71,7 +72,7 @@ plt.title("Box Plot for Multiple Numerical Variables")
 plt.xlabel("Variables")
 plt.ylabel("Values")
 plt.xticks(rotation=45)
-plt.show()
+st.pyplot(plt)
 
 df_2023 = df_all[df_all['year'] == 2023]
 
@@ -221,7 +222,7 @@ for i, index in enumerate(indices):
         ax.set_ylabel("Frequency")
 
 plt.tight_layout(rect=[0, 0, 1, 0.95])
-plt.show()
+st.pyplot(plt)
 
 # Ranking of the Top 10 Countries
 
@@ -274,7 +275,7 @@ axes[1].grid(True, which='major', axis='x', linestyle='--', linewidth=0.5)
 axes[1].set_axisbelow(True)
 
 plt.tight_layout()
-plt.show()
+st.pyplot(plt)
 
 #To analyze further, we check the average Life Ladder per Continent
 
@@ -436,7 +437,7 @@ for ax, title in zip(axes.flat, titles):
 
 
 plt.tight_layout()
-plt.show();
+st.pyplot(plt);
 
 plt.figure(figsize = [200,200])
 fig = px.scatter(df_2023,
@@ -525,7 +526,7 @@ ax.set_yticklabels(new_yticks, fontsize=10)
 plt.title("Heatmap of Missing Data (Countries by Year)", fontsize=16)
 plt.xlabel("Year", fontsize=14)
 plt.ylabel("Countries", fontsize=14)
-plt.show()
+st.pyplot(plt)
 
 #Analysis: the low number of countries in 2005, combined with the significant amount of missing data for that year, led us to decide to exclude 2005 from our analysis
 
@@ -787,7 +788,7 @@ plt.xlabel("Actual Values", family = 'monospace')
 plt.ylabel("Prediction", family = 'monospace')
 plt.title("Actual Values vs. Prediction", fontsize=18, fontweight='bold')
 plt.legend()
-plt.show()
+st.pyplot(plt)
 
 # Decision Tree Model - Purpose: Predict the actual numeric value of the "Life Ladder" variable (continuous target).
 
@@ -847,7 +848,7 @@ plot_tree(decision_tree_model,
           rounded=True,
           fontsize=12)
 plt.title("Simplified Decision Tree Visualization (Max Depth = 3)")
-plt.show()
+st.pyplot(plt)
 
 #Start training RandomForest
 
@@ -936,7 +937,7 @@ axes[2].set_ylabel('Feature', fontweight='bold')
 # Adjust layout for better spacing
 plt.subplots_adjust(wspace=0.5)  # Increase space between the subplots
 plt.tight_layout()
-plt.show()
+st.pyplot(plt)
 
 # Analysis:
 # Linear Regression: The model finds Log GDP per capita, Positive affect, and Social support to be important, suggesting that it captures both economic and psychological-social factors.

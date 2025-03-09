@@ -62,6 +62,8 @@ if page == pages[0] :
     st.dataframe(df_all.isna().sum())
 
 if page == pages[1] : 
+  st.markdown("<h3 style='color: #6E66CC;'>Data Vizualization</h3>", unsafe_allow_html=True)
+
   st.write("### Data Vizualization")
 
   #BOX PLOT FOR MULTIPLE NUMERICAL VARIABLES
