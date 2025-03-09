@@ -551,9 +551,407 @@ if page == pages[2] :
 
 if page == pages[3] : 
   st.markdown("<h3 style='color: #6E66CC;'>Modeling</h3>", unsafe_allow_html=True)
+  
+  df_all['filled_percentage'] = df_all.notna().sum(axis=1) / len(df_all.columns)
 
-      
-      
+  #How much rows have missing more than 50% of the data
+  rows_below_50 = df_all[df_all['filled_percentage'] < 0.5]
+
+  print("\n")
+  print("Shape of rows_below_50:", rows_below_50.shape)
+  print("No row is under 50% we can use the Dataset of every row")
+
+  #Data clean up –> delete columns
+
+
+  delete_col = ["year", 'Continent', 'Country name', 'filled_percentage', 'People per square kilometer','Population in millions', 'Area in square kilometer', "Area Code (M49)"]
+
+  df_clean = df_all.drop(delete_col, axis = 1)
+
+
+  from sklearn.model_selection import train_test_split
+
+  feats = df_clean.drop('Life Ladder', axis = 1)
+  target = df_clean['Life Ladder']
+
+  #separate the dataset into a training set and a test set – the test set contains 20% of the data
+
+  X_train, X_test, y_train, y_test = train_test_split(feats, target, test_size = 0.2, random_state = 42)
+
+  print("Traindata, Rows and Columns:", X_train.shape)
+  print("Testdata, Rows and Columns:", X_test.shape)
+
+  #Data clean up –> handle outliers
+
+  #We remove all values in the column "Healthy life expectancy at birth" with the value < 50 and replace the value with median
+
+  threshold = 45
+
+  #we start with showing us the outlier rows for X_train
+  outliers = X_train[X_train['Healthy life expectancy at birth'] < threshold]
+
+  #print(outliers)
+
+  #median per Region
+
+  medians_per_region = X_train[X_train['Healthy life expectancy at birth'] >= threshold] \
+      .groupby('Region')['Healthy life expectancy at birth'].median()
+  print("Median per Region (Training Dataset):")
+  print(medians_per_region)
+
+  #replace outliers in Training Set
+
+  X_train['Healthy life expectancy at birth'] = X_train.apply(
+      lambda row: medians_per_region[row['Region']]
+      if row['Healthy life expectancy at birth'] < threshold
+      else row['Healthy life expectancy at birth'],
+      axis=1
+  )
+
+  #replace outliers in Test Set
+
+  X_test['Healthy life expectancy at birth'] = X_test.apply(
+      lambda row: medians_per_region[row['Region']]
+      if row['Healthy life expectancy at birth'] < threshold
+      else row['Healthy life expectancy at birth'],
+      axis=1
+  )
+
+  #Data clean up –> NaN replace missing values with the median (per subregion)
+  # We do that after splitting the dataset into test and training sets because we don't want to have a data leakage
+
+  #We check which column has NaNs
+  #print(X_train.isna().sum())
+
+  columns_to_fix = [
+      "Log GDP per capita",
+      "Social support",
+      "Freedom to make life choices",
+      "Generosity",
+      "Perceptions of corruption",
+      "Positive affect",
+      "Negative affect"
+  ]
+
+  #we need a function for cleaning
+  def fix_column_by_region(dataframe, column_name, group_column="Region"):
+      # calculate Median per Region for columns
+      medians_per_region = dataframe.groupby(group_column)[column_name].median()
+
+  # replace NaN-Werte in column with Median
+      dataframe[column_name] = dataframe.apply(
+          lambda row: medians_per_region[row[group_column]]
+          if pd.isna(row[column_name])
+          else row[column_name],
+          axis=1
+      )
+      return dataframe
+
+  for col in columns_to_fix:
+      X_train = fix_column_by_region(X_train, col)
+      X_test = fix_column_by_region(X_test, col)
+
+
+
+  #Data Clean -> Region could be One hot encode before split (try to do it after tho)
+
+  #X_train = X_train.drop("Region", axis=1)
+  #X_test = X_test.drop("Region", axis=1)
+
+  #X_train.head()
+
+  #Data clean up -> Standard-Scalar
+
+  from sklearn.preprocessing import StandardScaler
+
+  columns_to_scale = [
+      "Log GDP per capita",
+      "Social support",
+      "Healthy life expectancy at birth",
+      "Freedom to make life choices",
+      "Generosity",
+      "Perceptions of corruption",
+      "Positive affect",
+      "Negative affect"
+  ]
+
+  scaler = StandardScaler()
+
+
+  # Fit
+  X_train_scaled_columns = scaler.fit_transform(X_train[columns_to_scale])
+
+  # Transform in X_test
+  X_test_scaled_columns = scaler.transform(X_test[columns_to_scale])
+
+  # Replace columns in X_train
+  X_train[columns_to_scale] = X_train_scaled_columns
+
+  # Replace columns in X_test
+  X_test[columns_to_scale] = X_test_scaled_columns
+
+  print(X_train.dtypes)  # Check column data types
+  print(X_train.select_dtypes(include=['object']).head())  # Show any text data
+
+  #One-hot encode the 'Region' column after splitting
+  X_train_encoded = pd.get_dummies(X_train, columns=['Region'], drop_first=True)
+  X_test_encoded = pd.get_dummies(X_test, columns=['Region'], drop_first=True)
+
+  # Ensure that X_test_encoded has the same columns as X_train_encoded
+  X_test_encoded = X_test_encoded.reindex(columns=X_train_encoded.columns, fill_value=0)
+
+  # Start Training: Linear Model
+
+  from sklearn.linear_model import LinearRegression
+  from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+
+  # Train the Linear Regression model on the encoded data
+  linear_model = LinearRegression()
+  linear_model.fit(X_train_encoded, y_train)  # Use X_train_encoded
+
+  # Predict and evaluate on the encoded test data
+  y_pred_linear_test = linear_model.predict(X_test_encoded)  # Use X_test_encoded
+
+  # Predict and evaluate on the encoded train data
+  y_pred_linear_train = linear_model.predict(X_train_encoded)  # Use X_train_encoded
+
+  # Evaluation for test data
+  mse_linear_test = mean_squared_error(y_test, y_pred_linear_test)
+  mae_linear_test = mean_absolute_error(y_test, y_pred_linear_test)
+  r2_linear_test = r2_score(y_test, y_pred_linear_test)
+
+  # Evaluation for train data
+  mse_linear_train = mean_squared_error(y_train, y_pred_linear_train)
+  mae_linear_train = mean_absolute_error(y_train, y_pred_linear_train)
+  r2_linear_train = r2_score(y_train, y_pred_linear_train)
+
+  # Print the results
+  print("Linear Regression Model Performance:")
+  print(f"Mean Squared Error (Test): {mse_linear_test:.4f}")
+  print(f"Mean Absolute Error (Test): {mae_linear_test:.4f}")
+  print(f"R² Score (Test): {r2_linear_test:.4f}")
+  print(f"Mean Squared Error (Train): {mse_linear_train:.4f}")
+  print(f"Mean Absolute Error (Train): {mae_linear_train:.4f}")
+  print(f"R² Score (Train): {r2_linear_train:.4f}")
+
+
+  # Feature Importance for Linear Regression (Coefficients)
+  coefficients = pd.DataFrame({
+      'Feature': X_train_encoded.columns,  # Feature names from the encoded training set
+      'Coefficient': linear_model.coef_  # Coefficients from the linear model
+  })
+  coefficients = coefficients.sort_values(by='Coefficient', ascending=False)
+
+  print("\nFeature Importance for Linear Regression (Coefficients):")
+  print(coefficients)
+
+
+
+  #Interpretation: R2=0.8228 means the Linear Regression model explains 82.28% of the variance in the target variable "Life Ladder."
+  #A higher 𝑅2 (closer to 1) indicates better model performance.
+  #The model performs quite well but is not perfect. It captures most of the relationships between the features and "Life Ladder," but there is still 23.73% variance unexplained.
+  #This suggests that there might be non-linear relationships or factors influencing "Life Ladder" that the linear model can't capture.
+
+  #Scatterplot
+  import matplotlib.pyplot as plt
+
+  fig, ax = plt.subplots(figsize=(8, 6))  # Set figure size (width, height)
+
+  plt.scatter(y_test, y_pred_linear_test, label="Predictions vs actual", color='#6E66CC', edgecolor='black', alpha=0.7)
+  plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], color="black", linewidth=1, linestyle="--", label="Ideal Fit")
+  plt.xlabel("Actual Values", family = 'monospace')
+  plt.ylabel("Prediction", family = 'monospace')
+  plt.title("Actual Values vs. Prediction", fontsize=18, fontweight='bold')
+  plt.legend()
+  st.pyplot(fig)
+
+  # Decision Tree Model - Purpose: Predict the actual numeric value of the "Life Ladder" variable (continuous target).
+
+
+  from sklearn.tree import DecisionTreeRegressor
+  from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+  from sklearn.tree import plot_tree
+  import matplotlib.pyplot as plt
+
+  # Train the Decision Tree model with a limited max depth (e.g., max_depth=3)
+  decision_tree_model = DecisionTreeRegressor(random_state=42, max_depth=3)
+  decision_tree_model.fit(X_train_encoded, y_train)
+
+  # Predict using the encoded test data
+  y_pred_tree_test = decision_tree_model.predict(X_test_encoded)
+
+  # Predict using the encoded train data
+  y_pred_tree_train = decision_tree_model.predict(X_train_encoded)
+
+  # Evaluate for test data
+  mse_tree_test = mean_squared_error(y_test, y_pred_tree_test)
+  mae_tree_test = mean_absolute_error(y_test, y_pred_tree_test)
+  r2_tree_test = r2_score(y_test, y_pred_tree_test)
+
+  # Evaluate for train data
+  mse_tree_train = mean_squared_error(y_train, y_pred_tree_train)
+  mae_tree_train = mean_absolute_error(y_train, y_pred_tree_train)
+  r2_tree_train = r2_score(y_train, y_pred_tree_train)
+
+  # Print the results
+  print("Decision Tree Model Performance:")
+  print(f"Mean Squared Error (Test): {mse_tree_test:.4f}")
+  print(f"Mean Absolute Error (Test): {mae_tree_test:.4f}")
+  print(f"R² Score (Test): {r2_tree_test:.4f}")
+  print(f"Mean Squared Error (Train): {mse_tree_train:.4f}")
+  print(f"Mean Absolute Error (Train): {mae_tree_train:.4f}")
+  print(f"R² Score (Train): {r2_tree_train:.4f}")
+
+  # Feature Importance for Decision Tree
+  feature_importance_tree = pd.DataFrame({
+      'Feature': X_train_encoded.columns,  # Feature names from the training set
+      'Importance': decision_tree_model.feature_importances_  # Feature importances from the decision tree model
+  })
+  feature_importance_tree = feature_importance_tree.sort_values(by='Importance', ascending=False)
+
+  print("\nFeature Importance for Decision Tree:")
+  print(feature_importance_tree)
+
+  # ================================
+  # Simpler Visualization of the Decision Tree
+  # ================================
+
+  plt.figure(figsize=(12, 8))
+  plot_tree(decision_tree_model,
+            feature_names=X_train_encoded.columns,
+            filled=True,
+            rounded=True,
+            fontsize=12)
+  plt.title("Simplified Decision Tree Visualization (Max Depth = 3)")
+  st.pyplot(plt)
+
+  #Start training RandomForest
+
+  from sklearn.ensemble import RandomForestRegressor
+  from sklearn.metrics import mean_squared_error, r2_score
+
+  # Initialisation
+  rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
+
+  # Train the model using the encoded data
+  rf_model.fit(X_train_encoded, y_train)  # Use X_train_encoded, not X_train
+
+  # Predict using the encoded test data
+  y_pred_test = rf_model.predict(X_test_encoded)  # Use X_test_encoded, not X_test
+
+  # Predict using the encoded train data
+  y_pred_train = rf_model.predict(X_train_encoded)  # Use X_train_encoded for training predictions
+
+  # Evaluation for test data
+  mae_rf_test = mean_absolute_error(y_test, y_pred_test)
+  mse_rf_test = mean_squared_error(y_test, y_pred_test)
+  r2_rf_test = r2_score(y_test, y_pred_test)
+
+  # Evaluation for train data
+  mae_rf_train = mean_absolute_error(y_train, y_pred_train)
+  mse_rf_train = mean_squared_error(y_train, y_pred_train)
+  r2_rf_train = r2_score(y_train, y_pred_train)
+
+  # Print the results
+  print(f"Mean Absolute Error (Test) Random Forest: {mae_rf_test:.2f}")
+  print(f"Mean Squared Error (Test) Random Forest: {mse_rf_test:.2f}")
+  print(f"R² Score (Test) Random Forest: {r2_rf_test:.2f}")
+  print(f"Mean Absolute Error (Train) Random Forest: {mae_rf_train:.2f}")
+  print(f"Mean Squared Error (Train) Random Forest: {mse_rf_train:.2f}")
+  print(f"R² Score (Train) Random Forest: {r2_rf_train:.2f}")
+
+  # Feature importances from the trained Random Forest model
+
+  import numpy as np
+
+  rf_feature_importances = rf_model.feature_importances_
+
+  # Sort feature importances in descending order and their corresponding feature names
+  rf_sorted_idx = np.argsort(rf_feature_importances)[::-1]
+  rf_sorted_importances = rf_feature_importances[rf_sorted_idx]
+  rf_sorted_features = [X_train_encoded.columns[i] for i in rf_sorted_idx]
+
+  # Print feature importance as a list
+  print("\nRandom Forest Feature Importances:")
+  for feature, importance in zip(rf_sorted_features, rf_sorted_importances):
+      print(f"{feature}: {importance:.4f}")
+
+  # Get top 10 features for each model
+
+  # For Linear Regression (based on coefficients)
+  top_10_linear = coefficients.head(10)
+
+  # For Decision Tree (based on feature importance)
+  top_10_tree = feature_importance_tree.head(10)
+
+  # For Random Forest (based on feature importance)
+  top_10_rf_features = rf_sorted_features[:10]
+  top_10_rf_importances = rf_sorted_importances[:10]
+
+  # Create subplots for side-by-side comparison
+  fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+
+  # Linear Regression Feature Importance Plot (based on coefficients)
+  sns.barplot(x='Coefficient', y='Feature', data=top_10_linear, ax=axes[0], palette='viridis', hue='Feature')
+  axes[0].set_title('Feature Importance for Linear Regression')
+  axes[0].set_xlabel('Coefficient Value', fontweight='bold')
+  axes[0].set_ylabel('Feature', fontweight='bold')
+
+  # Decision Tree Feature Importance Plot
+  sns.barplot(x='Importance', y='Feature', data=top_10_tree, ax=axes[1], palette='viridis', hue='Feature')
+  axes[1].set_title('Feature Importance for Decision Tree')
+  axes[1].set_xlabel('Importance', fontweight='bold')
+  axes[1].set_ylabel('Feature', fontweight='bold')
+
+  # Random Forest Feature Importance Plot
+  sns.barplot(x=top_10_rf_importances, y=top_10_rf_features, ax=axes[2], palette='viridis')
+  axes[2].set_title('Feature Importance for Random Forest')
+  axes[2].set_xlabel('Importance', fontweight='bold')
+  axes[2].set_ylabel('Feature', fontweight='bold')
+
+  # Adjust layout for better spacing
+  plt.subplots_adjust(wspace=0.5)  # Increase space between the subplots
+  plt.tight_layout()
+  st.pyplot(plt)
+
+  # Analysis:
+  # Linear Regression: The model finds Log GDP per capita, Positive affect, and Social support to be important, suggesting that it captures both economic and psychological-social factors.
+  # Decision Tree: Focuses almost entirely on Log GDP per capita, showing high bias toward economic factors. Other features are neglected in this model.
+  # Random Forest: Prioritizes Log GDP per capita, with a broad range of features contributing less. It handles nonlinear relationships well.
+
+  # Comparing:
+  # Log GDP per capita is universally important across all three models, suggesting that economic wealth plays a central role in life satisfaction.
+  # Positive affect and Social support are important in both Random Forest and Linear Regression, but not in Decision Tree (likely due to the simplistic nature of the tree model).
+  # Features like Perceptions of corruption, Generosity, and Negative affect play a minimal role in all models, and could likely be excluded without losing predictive power.
+  # In summary, economic factors dominate across all models, but emotional and social factors are also quite relevant, especially in Random Forest and Linear Regression,
+  # which consider complex interactions and linear relationships respectively.
+
+  #Model performance comparison
+
+  print("\nModel Performance Comparison:")
+
+  # For Linear Regression
+  print(f"Linear Regression - Train MAE: {mae_linear_train:.4f}, Test MAE: {mae_linear_test:.4f}, "
+        f"Train MSE: {mse_linear_train:.4f}, Test MSE: {mse_linear_test:.4f}, "
+        f"Train R²: {r2_linear_train:.4f}, Test R²: {r2_linear_test:.4f}")
+
+  # For Decision Tree
+  print(f"    Decision Tree - Train MAE: {mae_tree_train:.4f}, Test MAE: {mae_tree_test:.4f}, "
+        f"Train MSE: {mse_tree_train:.4f}, Test MSE: {mse_tree_test:.4f}, "
+        f"Train R²: {r2_tree_train:.4f}, Test R²: {r2_tree_test:.4f}")
+
+  # For Random Forest
+  print(f"    Random Forest - Train MAE: {mae_rf_train:.4f}, Test MAE: {mae_rf_test:.4f}, "
+        f"Train MSE: {mse_rf_train:.4f}, Test MSE: {mse_rf_test:.4f}, "
+        f"Train R²: {r2_rf_train:.4f}, Test R²: {r2_rf_test:.4f}")
+
+
+
+
+
+
+        
+        
 
 
 
