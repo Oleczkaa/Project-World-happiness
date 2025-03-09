@@ -942,18 +942,7 @@ if page == pages[3] :
   plt.tight_layout()
   st.pyplot(plt)
 
-  # Analysis:
-  # Linear Regression: The model finds Log GDP per capita, Positive affect, and Social support to be important, suggesting that it captures both economic and psychological-social factors.
-  # Decision Tree: Focuses almost entirely on Log GDP per capita, showing high bias toward economic factors. Other features are neglected in this model.
-  # Random Forest: Prioritizes Log GDP per capita, with a broad range of features contributing less. It handles nonlinear relationships well.
-
-  # Comparing:
-  # Log GDP per capita is universally important across all three models, suggesting that economic wealth plays a central role in life satisfaction.
-  # Positive affect and Social support are important in both Random Forest and Linear Regression, but not in Decision Tree (likely due to the simplistic nature of the tree model).
-  # Features like Perceptions of corruption, Generosity, and Negative affect play a minimal role in all models, and could likely be excluded without losing predictive power.
-  # In summary, economic factors dominate across all models, but emotional and social factors are also quite relevant, especially in Random Forest and Linear Regression,
-  # which consider complex interactions and linear relationships respectively.
-
+  
   #Model performance comparison
 
   print("\nModel Performance Comparison:")
