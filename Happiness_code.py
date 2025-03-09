@@ -851,6 +851,13 @@ if page == pages[3] :
   # Train the model using the encoded data
   rf_model.fit(X_train_encoded, y_train)  # Use X_train_encoded, not X_train
 
+  #Save the trained model using joblib. Once I created a dump file, 
+  # I commented it out and put the file to github
+  #joblib.dump(rf_model, 'rf_model.pkl')  # Save the model to a file
+  
+  #Load the saved model
+  rf_model = joblib.load('rf_model.pkl')
+  
   # Predict using the encoded test data
   y_pred_test = rf_model.predict(X_test_encoded)  # Use X_test_encoded, not X_test
 
