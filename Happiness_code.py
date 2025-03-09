@@ -125,6 +125,8 @@ if page == pages[1] :
     plt.xticks(rotation=45, ha='right')
     st.pyplot(plt)
 
+  # Add a title to the page
+  st.title("Distribution of Indices for Selected Years")
   
   # Define the styling function
   def style_boxplot(box, facecolor, edgecolor, linewidth, flier_color, median_color, whisker_color):
@@ -143,9 +145,42 @@ if page == pages[1] :
   style_boxplot(box1, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
   style_boxplot(box2, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
   style_boxplot(box3, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
+  
+  #Distribution of indices next to eachother for 2013, 2018, 2021, 2023 (to compare pro and after covid)
 
-  
-  
+  # List of indices to analyze
+  indices = ['Life Ladder', 'Log GDP per capita', 'Social support',
+            'Healthy life expectancy at birth', 'Freedom to make life choices',
+            'Generosity', 'Perceptions of corruption', 'Positive affect', 'Negative affect']
+
+  # Specify the years we would like to to analyze
+  years_to_plot = [2013, 2018, 2021,2023]
+
+  # Create a figure for the histograms
+  fig, axes = plt.subplots(nrows=len(indices), ncols=len(years_to_plot), figsize=(20, 25))  # Rows for indices, columns for years
+  fig.suptitle("Distribution of Indices for Selected Years", fontsize=20)
+
+  # Loop over each variable and year
+  for i, index in enumerate(indices):
+      for j, year in enumerate(years_to_plot):
+          ax = axes[i, j]
+
+          # Filter data for the current year
+          yearly_data = df_all[df_all['year'] == year]
+
+          # Plot the histogram
+          ax.hist(yearly_data[index].dropna(), bins=20, color='#6E66CC', edgecolor='black')
+          ax.set_title(f"{index} ({year})")
+          ax.set_xlabel(index)
+          ax.set_ylabel("Frequency")
+
+  plt.tight_layout(rect=[0, 0, 1, 0.95])
+  st.pyplot(fig)
+
+
+
+    
+    
 
 
 
