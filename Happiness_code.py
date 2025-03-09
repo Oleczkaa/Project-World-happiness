@@ -780,9 +780,11 @@ if page == pages[3] :
   from sklearn.tree import plot_tree
   import matplotlib.pyplot as plt
 
+  #comment out the code below so the model does not retrain
+
   # Train the Decision Tree model with a limited max depth (e.g., max_depth=3)
-  decision_tree_model = DecisionTreeRegressor(random_state=42, max_depth=3)
-  decision_tree_model.fit(X_train_encoded, y_train)
+  #decision_tree_model = DecisionTreeRegressor(random_state=42, max_depth=3)
+  #decision_tree_model.fit(X_train_encoded, y_train)
 
   # Save the trained model using joblib
   #joblib.dump(decision_tree_model, 'decision_tree_model.pkl')  # Save the model to a file
@@ -845,11 +847,12 @@ if page == pages[3] :
   from sklearn.ensemble import RandomForestRegressor
   from sklearn.metrics import mean_squared_error, r2_score
 
+  #comment out the code below so the model does not retrain
   # Initialisation
-  rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
+  #rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
 
   # Train the model using the encoded data
-  rf_model.fit(X_train_encoded, y_train)  # Use X_train_encoded, not X_train
+  #rf_model.fit(X_train_encoded, y_train)  # Use X_train_encoded, not X_train
 
   #Save the trained model using joblib. Once I created a dump file, 
   # I commented it out and put the file to github
