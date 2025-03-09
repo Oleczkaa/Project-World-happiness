@@ -290,7 +290,7 @@ fig = px.bar(continent_avg_life_ladder, x="Life Ladder", y="Continent",
              orientation = "h",
              labels={"Continent": "Continent", "Life Ladder": "Average Life Ladder"})
 
-fig.show()
+st.plotly_chart(fig)
 
 #Life ladder per country (top 10 per each continent)
 
@@ -318,7 +318,8 @@ fig = px.bar(top_countries_per_continent,
              title='Top 10 Countries by Average Life Ladder for Each Continent',
              labels={'Life Ladder': 'Average Life Ladder', 'Country name': 'Country', 'Continent': 'Continent'})
 
-fig.show()
+
+st.plotly_chart(fig)
 
 #Bottom 10 countries per continent
 
@@ -345,7 +346,7 @@ fig = px.bar(bottom_countries_per_continent,
              title='Bottom 10 Countries by Average Life Ladder for Each Continent',
              labels={'Life Ladder': 'Average Life Ladder', 'Country name': 'Country', 'Continent': 'Continent'})
 
-fig.show()
+st.plotly_chart(fig)
 
 #Life ladder by continent over time (animation)
 
@@ -356,7 +357,7 @@ fig = px.box(df_anim, x="Continent", y="Life Ladder", color="Continent",
              color_discrete_map=continent_colors,
              animation_frame="year", range_y=[0,9], title = "Life Ladder by continent over time (animation)",
              color_discrete_sequence=px.colors.qualitative.Dark24)
-fig.show()
+st.plotly_chart(fig)
 
 #AVERAGE LIFE LADDER BY CONTINENT
 
@@ -370,7 +371,7 @@ fig = px.line(global_life_ladder, x="year", y="Life Ladder",
               title="Evolution of Life Ladder (Global)",
               labels={"Life Ladder": "Life Ladder", "year": "Year"})
 
-fig.show()
+st.plotly_chart(fig)
 
 #Evolution of Life Ladder by Continent
 # Group by 'year' and 'Region' to get the average Life Ladder for each region
@@ -382,7 +383,7 @@ fig = px.line(region_life_ladder, x="year", y="Life Ladder", color="Continent",
               color_discrete_map=continent_colors,
               labels={"Life Ladder": "Life Ladder", "year": "Year", "Continent": "Continent"})
 
-fig.show()
+st.plotly_chart(fig)
 
 #Evolution of Life Ladder by Region
 
@@ -451,7 +452,7 @@ fig = px.scatter(df_2023,
                  #size_max=20,
                  color_discrete_map=region_colors
                  )
-fig.show();
+st.plotly_chart(fig);
 
 #WHAT DOES HAPPINESS LOOK LIKE WHEN MAPPED
 
@@ -475,7 +476,7 @@ fig.update_layout(
 )
 
 # Display the map
-fig.show()
+st.plotly_chart(fig)
 
 # Count the number of unique countries per year
 countries_per_year = df_all.groupby('year')['Country name'].nunique().reset_index()
@@ -492,7 +493,7 @@ fig.update_traces(line=dict(width=3), marker=dict(size=8))
 fig.update_xaxes(type='category')
 
 # Show the plot
-fig.show()
+st.plotly_chart(fig)
 
 #MISSING DATA PER COUNTRY BY YEAR
 
@@ -540,12 +541,12 @@ import seaborn as sns
 plt.figure(figsize=[400,400])
 fig = px.scatter(df_all, x="Life Ladder", y="Social support",
                  hover_name="Healthy life expectancy at birth", title="Life Ladder vs social support",trendline="ols")
-fig.show();
+st.plotly_chart(fig);
 
 #plt.figure(figsize=[400,400])
 #fig = px.scatter(df_all, x="Life Ladder", y="Generosity",
 #                 hover_name="Healthy life expectancy at birth", title="Life Ladder vs Generosity",trendline="ols")
-#fig.show();
+#st.plotly_chart(fig);
 
 #Lets remove year 2005 from our dataset
 df_all = df_all[df_all['year'] != 2005]
@@ -574,27 +575,11 @@ print("No row is under 50% we can use the Dataset of every row")
 
 #Data clean up –> delete columns
 
-#all columns are really necessary?
-#No, we delete all unnecessary ones.
 
 delete_col = ["year", 'Continent', 'Country name', 'filled_percentage', 'People per square kilometer','Population in millions', 'Area in square kilometer', "Area Code (M49)"]
 
 df_clean = df_all.drop(delete_col, axis = 1)
 
-df_clean.head()
-
-#Data clean up -> , to .
-
-#f_clean['People per square kilometer'] = df_clean['People per square kilometer'].str.replace(',', '.')
-#df_clean['Population in millions'] = df_clean['Population in millions'].str.replace(',', '.')
-#df_clean['Area in square kilometer'] = df_clean['Area in square kilometer'].str.replace(',', '')
-#df_clean.head()
-
-#Data clean up –> split the dataset into two parts
-
-#separate the target variable from explanatory variables
-#feats = explaind Variables -> all expect Life Ladder
-#target = target Variable -> Life Ladder
 
 from sklearn.model_selection import train_test_split
 
@@ -782,13 +767,15 @@ print(coefficients)
 #Scatterplot
 import matplotlib.pyplot as plt
 
+fig, ax = plt.subplots(figsize=(8, 6))  # Set figure size (width, height)
+
 plt.scatter(y_test, y_pred_linear_test, label="Predictions vs actual", color='#6E66CC', edgecolor='black', alpha=0.7)
 plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], color="black", linewidth=1, linestyle="--", label="Ideal Fit")
 plt.xlabel("Actual Values", family = 'monospace')
 plt.ylabel("Prediction", family = 'monospace')
 plt.title("Actual Values vs. Prediction", fontsize=18, fontweight='bold')
 plt.legend()
-st.pyplot(plt)
+st.pyplot(fig)
 
 # Decision Tree Model - Purpose: Predict the actual numeric value of the "Life Ladder" variable (continuous target).
 
@@ -971,10 +958,5 @@ print(f"    Random Forest - Train MAE: {mae_rf_train:.4f}, Test MAE: {mae_rf_tes
       f"Train R²: {r2_rf_train:.4f}, Test R²: {r2_rf_test:.4f}")
 
 
-# Save DataFrames to CSV
-df_all.to_csv("df_all.csv", index=False)
-df_clean.to_csv("df_clean.csv", index=False)
 
-# Download the files
-files.download("df_all.csv")
-files.download("df_clean.csv")
+
