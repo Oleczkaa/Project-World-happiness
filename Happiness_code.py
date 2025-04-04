@@ -56,7 +56,7 @@ region_colors = {
 if page == pages[0] : 
   st.write("") 
   st.write("") 
-  st.markdown("<h3 style='color: #6E66CC;'>Project Description</h3>", unsafe_allow_html=True)
+  #st.markdown("<h3 style='color: #6E66CC;'>Project Description</h3>", unsafe_allow_html=True)
   import streamlit as st
 
   st.markdown("""
@@ -100,8 +100,13 @@ if page == pages[0] :
               - 🗺️ **By Region**
               - 🌎 **By Country**
               - 📅 **By Year**
-              The goal is to identify patterns that influence happiness across different countries and continents.
               """)
+  st.write("") 
+  st.markdown("The **goal** is to identify patterns that influence happiness across different countries and continents.")
+  
+  st.write("") 
+  st.write("")
+  st.write("")
 
 if page == pages[1] : 
   st.markdown("<h3 style='color: #6E66CC;'>Presentation of Data</h3>", unsafe_allow_html=True)
