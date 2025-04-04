@@ -235,7 +235,10 @@ if page == pages[2] :
   style_boxplot(box6, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
   st.pyplot(fig2)
 
-  st.markdown("""
+
+
+  with st.expander("🔍 Interpretation of 2005-2023 Boxplot"):
+    st.markdown("""
     ### Detailed Interpretation of Boxplots
 
     **a) Life Ladder & Log GDP per capita**
@@ -300,12 +303,17 @@ if page == pages[2] :
 
     ---
 
+    """)
+    
+  st.markdown("""
     ### Conclusion
 
     The boxplots reveal differing distributions and scales across indicators. Notable outliers in **life expectancy** and **generosity** suggest areas for further investigation. Additionally, the inconsistent scaling of indicators implies that a unified visual representation could improve readability.
 
     ---
+    """)
 
+  st.markdown("""
     ### What About a Boxplot from 2023?
 
     To get a snapshot of the **current year**, we will now generate a **boxplot specifically for 2023** and analyze its insights.
@@ -370,7 +378,16 @@ if page == pages[2] :
   style_boxplot(box2, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
   style_boxplot(box3, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
   st.pyplot(fig)
+  
+  with st.expander("🔍 Interpretation of 2023 Boxplot"):
+    st.markdown("""
+     ### Interpreting 2023 Data
 
+     The data from **2023** appears more stable, with **fewer extreme values (outliers)** across several categories.  
+     This may suggest improvements in data collection or reflect a broader trend of stability in key indicators across countries.
+
+     However, some categories—such as **Generosity**—continue to show greater variability, highlighting ongoing challenges or country-specific differences.
+        """)
 
   # # Add a title to the page
   # st.title("Distribution of Indices for Selected Years")
