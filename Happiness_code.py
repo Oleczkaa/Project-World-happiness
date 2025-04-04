@@ -176,6 +176,8 @@ if page == pages[2] :
   Below is a comparison of indicators from **2005 to 2023**:
   """)
  
+  st.write("")
+  st.write("")
 
   fig2, ax2 = plt.subplots(1,3, figsize=(12, 6))
 
@@ -233,51 +235,142 @@ if page == pages[2] :
   style_boxplot(box6, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
   st.pyplot(fig2)
 
+  st.markdown("""
+    ### Detailed Interpretation of Boxplots
 
-  # Add a title to the page
-  st.title("Comparison of Indicators from 2023")
+    **a) Life Ladder & Log GDP per capita**
+
+    - **Life Ladder**  
+    • Values mainly range between 2 and 8  
+    • The median is approximately 5  
+    • Some outliers fall below 2  
+    **Analysis:** About half of the countries are below average satisfaction, and half are above. Globally, most people report moderate happiness—neither extremely happy nor extremely unhappy.
+
+    - **Log GDP per capita**  
+    • Values range between 7 and 12  
+    • The median is around 10  
+    • No obvious outliers  
+    **Analysis:** The range reveals significant income disparities between the wealthiest and poorest countries. A higher Log GDP per capita reflects greater economic prosperity and a higher standard of living. The median being closer to the upper end suggests that most countries are middle- to high-income, with fewer at the very low end.
+
+    ---
+
+    **b) Healthy Life Expectancy at Birth**
+
+    - Values range from approximately 40 to 70 years  
+    - The median is around 65 years  
+    - Several outliers exist below 40 years—some even under 10, which may indicate potential data errors  
+    **Note:** Extremely low values may require further investigation to confirm their accuracy.
+
+    ---
+
+    **c) Other Metrics**
+
+    - **Social Support**  
+    • Values mainly range between 0.5 and 1.0  
+    • The median is around 0.8  
+    • Some outliers  
+    **Analysis:** A median of 0.8 suggests that most countries report high levels of social support.
+
+    - **Freedom to Make Life Choices**  
+    • Values mainly range between 0.7 and 0.9  
+    • The median is around 0.8  
+    • Some outliers  
+    **Analysis:** Most countries demonstrate relatively high levels of personal freedom, with a narrow range concentrated at the upper end of the scale.
+
+    - **Generosity**  
+    • Shows a wide distribution, including negative values  
+    • Many outliers are visible  
+    **Analysis:** The variability in generosity scores may reflect cultural, economic, or societal differences in how generosity is measured or expressed.
+
+    - **Perceptions of Corruption**  
+    • Values range between 0.2 and 1.0  
+    • Numerous outliers  
+    **Analysis:** The median corruption score is approximately 0.8 (on a scale where higher means more perceived corruption), indicating that many countries report relatively high corruption levels. The outliers highlight significant variation across nations, likely tied to unique political or social conditions.
+
+    - **Positive Affect**  
+    • Values range between 0.3 and 0.9  
+    • The median is around 0.7  
+    **Analysis:** On average, countries report relatively high levels of positive emotion, though there is noticeable variation.
+
+    - **Negative Affect**  
+    • Values range between 0 and 0.5  
+    • The median is around 0.3  
+    • Fewer outliers  
+    **Analysis:** Most countries report relatively low levels of negative emotion.
+
+    ---
+
+    ### Conclusion
+
+    The boxplots reveal differing distributions and scales across indicators. Notable outliers in **life expectancy** and **generosity** suggest areas for further investigation. Additionally, the inconsistent scaling of indicators implies that a unified visual representation could improve readability.
+
+    ---
+
+    ### What About a Boxplot from 2023?
+
+    To get a snapshot of the **current year**, we will now generate a **boxplot specifically for 2023** and analyze its insights.
+    """)
+
 
   df_2023 = df_all[df_all['year'] == 2023]
 
-  # Create a layout with three columns
-  col1, col2, col3 = st.columns(3)
+  #show Boxplots with nearly same scale
+  fig, ax = plt.subplots(1,3, figsize=(12, 6))
 
-  # Create a boxplot for each column
-  with col1:
-    st.write("Life Ladder & Log GDP per capita")
-    box1 = plt.boxplot(
-        [df_2023['Life Ladder'], df_2023['Log GDP per capita'].dropna()],
-        patch_artist=True,
-        widths=0.3
-    )
-    plt.title("Life Ladder & Log GDP per capita")
-    plt.xticks(rotation=45, ha='right')
-    st.pyplot(plt)
+  box1 = ax[0].boxplot(
+    [df_2023['Life Ladder'], df_2023['Log GDP per capita'].dropna()],
+     patch_artist=True,
+     widths = 0.3)
 
-  with col2:
-    st.write("Healthy life expectancy at birth")
-    box2 = plt.boxplot(
-        [df_2023['Healthy life expectancy at birth'].dropna()],
-        patch_artist=True,
-        widths=0.15
-    )
-    plt.title("Healthy life expectancy at birth")
-    plt.xticks(rotation=45, ha='right')
-    st.pyplot(plt)
+  #show Boxplots with nearly same scale
+  box2 = ax[1].boxplot(
+    [df_2023['Healthy life expectancy at birth'].dropna()],
+    patch_artist=True,
+    widths = 0.15)
 
-  with col3:
-    st.write("Other Metrics")
-    box3 = plt.boxplot(
-        [df_2023[col].dropna() for col in [
-            'Social support', 'Freedom to make life choices', 'Generosity',
-            'Perceptions of corruption', 'Positive affect', 'Negative affect'
-        ]],
-        patch_artist=True,
-        widths=0.8
-    )
-    plt.title("Other Metrics")
-    plt.xticks(rotation=45, ha='right')
-    st.pyplot(plt)
+  #show Boxplots with nearly same scale
+  box3 = ax[2].boxplot(
+    [df_2023[col].dropna() for col in [
+        'Social support', 'Freedom to make life choices', 'Generosity',
+        'Perceptions of corruption', 'Positive affect', 'Negative affect'
+    ]],
+     patch_artist=True,
+     widths = 0.8)
+
+  #Title
+  fig.suptitle("Comparison of Indicators from 2023", fontsize=18, fontweight='bold')
+
+  #Subplot Titels
+
+  titles = ['Life Ladder & Log GDP per capita', 'Healthy life expectancy at birth', 'Other Metrics']
+  xticks = [ ['Life Ladder', 'Log GDP per capita'], ['Healthy life expectancy at birth'],
+    ['Social Support', 'Freedom', 'Generosity', 'Corruption', 'Positive', 'Negative']
+  ]
+
+  for i, ax_i in enumerate(ax):
+    ax_i.set_title(titles[i])
+    ax_i.set_xticklabels(xticks[i], rotation=45, ha='right')
+
+  # Coloring Boxplot – Styling
+
+  def style_boxplot(box, facecolor, edgecolor, linewidth, flier_color, median_color, whisker_color):
+    for patch in box['boxes']:
+        patch.set_facecolor(facecolor)
+        patch.set_edgecolor(edgecolor)
+        patch.set_linewidth(linewidth)
+    for flier in box['fliers']:
+        flier.set(marker='o', markerfacecolor=flier_color, alpha=0.5)
+    for median in box['medians']:
+        median.set(color=median_color, linewidth=2)
+    for whisker in box['whiskers']:
+        whisker.set(color=whisker_color, linewidth=1, linestyle='--')
+
+  # Apply styling
+  style_boxplot(box1, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
+  style_boxplot(box2, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
+  style_boxplot(box3, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
+  st.pyplot(fig)
+
 
   # # Add a title to the page
   # st.title("Distribution of Indices for Selected Years")
