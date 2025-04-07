@@ -164,9 +164,14 @@ if page == pages[2] :
 
     We need to **investigate this further** to rule out any errors in the dataset,  
     as such discrepancies could undermine the **credibility of our analysis**.
+    
     """)
   st.write("")
   st.write("")
+
+  st.markdown("""
+    ---
+    """)
 
   st.markdown("""
   ### Visualizing Indicator Scales
