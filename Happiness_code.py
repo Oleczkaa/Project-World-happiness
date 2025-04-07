@@ -379,6 +379,8 @@ if page == pages[2] :
   style_boxplot(box3, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
   st.pyplot(fig)
   
+ 
+  
   with st.expander("🔍 Interpretation of 2023 Boxplot"):
     st.markdown("""
      ### Interpreting 2023 Data
@@ -388,7 +390,10 @@ if page == pages[2] :
 
      However, some categories—such as **Generosity**—continue to show greater variability, highlighting ongoing challenges or country-specific differences.
         """)
-
+    
+  st.markdown("""
+              ---
+              """)
   # # Add a title to the page
   # st.title("Distribution of Indices for Selected Years")
   
@@ -441,7 +446,18 @@ if page == pages[2] :
   # plt.tight_layout(rect=[0, 0, 1, 0.95])
   # st.pyplot(fig)
   
+  st.markdown("""
+    ### 🌍 Which Country Has the Highest and Lowest *Life Ladder*?
 
+    To better understand global happiness in **2023**, we'll display a ranking of the:
+
+    - 🟢 **Top 10 happiest countries**  
+    - 🔴 **Bottom 10 least happy countries**
+
+    This ranking is based on the **Life Ladder** score — a self-reported measure of well-being and life satisfaction.
+
+    Each country is color-coded by **continent** to highlight geographic patterns and differences in happiness levels across the globe.
+    """)
 
   # Ranking of the Top 10 Countries
 
@@ -496,7 +512,38 @@ if page == pages[2] :
   plt.tight_layout()
   st.pyplot(plt)
 
+  st.markdown("""
+    ### 🧠 Conclusion
+
+    The **Top 10** happiest countries are primarily located in **Europe**, the **Americas**, and **Oceania**,  
+    while the **Bottom 10** are mostly found in **Africa** and parts of **Asia**.
+
+    This geographical divide highlights regional differences in life satisfaction and well-being.
+    """)
+
+  st.markdown("""
+              ---
+              """)
+  
+
   #To analyze further, we check the average Life Ladder per Continent
+  
+  st.markdown("""
+    ### 🤔 What Could Be the Reason for This?
+
+    Let’s take a closer look at the **ranking by continent**.
+
+    As expected, **Europe**, the **Americas**, and **Oceania** rank the highest in terms of life satisfaction.  
+    These regions generally consist of countries with:
+
+    - 💰 **Higher economic development**
+    - 📈 **Greater GDP per capita**
+    - 🏥 **Better healthcare**
+    - 🎓 **Stronger education systems**
+    - 🏗️ **More robust infrastructure**
+
+    All of these factors tend to contribute to **higher levels of happiness** and overall **life satisfaction**.
+    """)
 
   continent_avg_life_ladder = df_all.groupby('Continent')['Life Ladder'].mean().reset_index()
   continent_avg_life_ladder = continent_avg_life_ladder.sort_values('Life Ladder', ascending=False)
@@ -511,6 +558,28 @@ if page == pages[2] :
 
   st.plotly_chart(fig)
 
+  st.markdown("""
+    ### 🧾 Conclusion
+
+    These regions have the conditions that foster well-being, with wealthier, more developed countries offering their citizens higher living standards and opportunities for personal growth.  
+
+    The consistent pattern of high life satisfaction in these regions underscores the importance of **economic stability**, **social support**, **political rights**, and **healthcare** in promoting happiness and overall well-being.
+
+    ---
+    """)
+  
+  st.markdown("""
+    ### 🌍 Regional Deep Dive: Top 10 by Continent
+
+    Now, let's take a closer look and analyze the **top 10 countries from each continent**.
+
+    As observed earlier, **Europe** ranks the highest overall, with the **Nordic countries** standing out as the happiest in the region. Europe appears to be **consistently happier** than other continents.
+
+    Interestingly, several **Asian countries** also score high on the **Life Ladder**, despite Asia as a whole ranking **second to last**.  
+    This suggests that **life satisfaction in Asia is unevenly distributed**, with significant differences between individual countries.
+
+    """)
+  
   #Life ladder per country (top 10 per each continent)
 
   # Group by 'Continent' and 'Country name' to get the average "Life Ladder"
@@ -540,6 +609,14 @@ if page == pages[2] :
 
   st.plotly_chart(fig)
 
+  st.markdown("""
+    ### 📉 Exploring the Bottom 10 by Continent
+
+    Looking at the **10 lowest-ranking countries** for each continent, we can see that—as suspected—**Asia** places quite low. As mentioned above, this further highlights how **life satisfaction in Asia may be unevenly distributed**, with a sharp contrast between countries.
+
+    **Africa**, however, ranks **even lower than Asia**. This could be the result of a combination of **complex social, economic, political, and environmental factors**.  
+    Many African nations face challenges such as **high levels of poverty**, **economic instability**, and **limited access to essential services**, all of which can significantly impact life satisfaction.
+    """)
   #Bottom 10 countries per continent
 
   # Calculate the average "Life Ladder" for each country within each continent
@@ -566,6 +643,12 @@ if page == pages[2] :
               labels={'Life Ladder': 'Average Life Ladder', 'Country name': 'Country', 'Continent': 'Continent'})
 
   st.plotly_chart(fig)
+
+  st.markdown("""
+    ---
+  """)
+
+
 
   #Life ladder by continent over time (animation)
 
