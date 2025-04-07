@@ -648,7 +648,12 @@ if page == pages[2] :
     ---
   """)
 
+  st.markdown("""
+    ### 📈 Happiness Over Time
 
+    Are people becoming **happier** or **less satisfied** year by year?  
+    Let’s take a look at the global trend in Life Ladder scores to see how happiness has evolved over time.
+    """)
 
   #Life ladder by continent over time (animation)
 
@@ -661,6 +666,22 @@ if page == pages[2] :
               color_discrete_sequence=px.colors.qualitative.Dark24)
   st.plotly_chart(fig)
 
+  st.markdown("""
+    
+    ### 📉 Conclusion 
+    In **Europe**, the Life Ladder values fluctuated widely in earlier years, but since **2020**, the range has **narrowed and shifted upwards**, indicating a general **increase in happiness**. A **similar upward trend** can be seen in the **Americas**.
+
+    In contrast, **Africa** has remained relatively **stable but at lower levels** of life satisfaction. The only noticeable shift is a slight narrowing of the range around **2020**, though overall values remain lower compared to other continents.
+
+    ---
+    """)
+
+  st.markdown("""
+    ### 🌍 Global Evolution of Life Ladder
+
+    How has global happiness evolved over time?  
+    Let's explore the changes in the **Life Ladder** scores from 2005 to 2023 to understand the broader trends in global life satisfaction.
+    """)
   #AVERAGE LIFE LADDER BY CONTINENT
 
 
@@ -675,6 +696,19 @@ if page == pages[2] :
 
   st.plotly_chart(fig)
 
+  st.markdown("""
+    We can observe a **positive trend**, indicating that people around the world are becoming happier. However, there is an exception in **2022**, which could be linked to the impact of the **war in Ukraine**.
+
+    ---
+    """)
+  
+  st.markdown("""
+    ### 🌍 Evolution of Life Ladder by Continent
+
+    Now, let’s dive deeper into how the **Life Ladder** has evolved over time across different continents.  
+    We’ll explore the trends and patterns specific to each continent to see how life satisfaction has changed regionally.
+    """)
+
   #Evolution of Life Ladder by Continent
   # Group by 'year' and 'Region' to get the average Life Ladder for each region
   region_life_ladder = df_all.groupby(["year", "Continent"])["Life Ladder"].mean().reset_index()
@@ -687,6 +721,22 @@ if page == pages[2] :
 
   st.plotly_chart(fig)
 
+  st.markdown("""
+    ### 📉 Conclusion
+
+    **Life satisfaction in Europe** consistently increased until **2022**, supporting our earlier observation. However, the decline in **2022** may be related to the ongoing crisis in **Ukraine**.
+
+    Both the **Americas** remained stable until **2020**, with a decline likely due to the impact of **COVID-19**, but have shown an **upward trend** since then.
+
+    ---
+    """)
+
+  st.markdown("""
+    ### 🌍 Regions of Each Continent
+
+    Next, let’s explore the **regional differences** within each continent to understand how life satisfaction varies across countries with similar geographical or cultural backgrounds.
+    """)
+  
   #Evolution of Life Ladder by Region
 
   mean_per_year = df_all.groupby('year')['Life Ladder'].mean().reset_index()
@@ -742,6 +792,28 @@ if page == pages[2] :
   plt.tight_layout()
   st.pyplot(plt);
 
+  st.markdown("""
+    ### 📊 Conclusion
+
+    **General:** The **Life Ladder curve** was exceptionally high in **2005**, primarily observed in **Europe**, but also in **Central and South America** as well as **Asia**. It is likely that the data evaluation method changed starting in **2006**, and this is reflected in the data. Alternatively, the data set may be missing many values from **2005**. We will investigate this further later on and decide whether to clean the data or remove **2005** altogether.
+
+    **Europe:** **Northern and Western Europe** tend to report higher life satisfaction compared to **Eastern and Southern Europe**. This difference is likely related to varying levels of life comfort, economic development, and social factors in these regions.
+
+    **Africa:** The life satisfaction trends in **Africa** are quite erratic, fluctuating between low and high scores year by year. However, **Northern Africa** appears to be the most stable, consistently maintaining relatively high Life Ladder scores compared to other regions. Meanwhile, **Central Africa** has shown an upward trend since **2015**, maintaining higher levels of life satisfaction in recent years.
+
+    **Asia:** Life satisfaction has been steadily increasing across most regions of **Asia**, with the exception of **Southern Asia**, where the trend has been consistently decreasing. This decline can be attributed to a variety of factors, including ongoing economic challenges, political instability, poverty, etc., which continue to affect the well-being of people in the region.
+
+    **Americas:** In **Central and South America**, we observe a positive trend, indicating that countries are becoming happier. However, **Northern America** has shown a decreasing trend for quite some time, suggesting that people are slowly becoming less satisfied.
+
+    ---
+    """)
+  
+  st.markdown("""
+    ### 🔍 Exploring the Relationship Between Life Expectancy and Life Ladder
+
+    By looking at the relationship between **life expectancy** and the **Life Ladder**, we can observe that some continents show more consistency in these factors. This analysis helps us understand how different regions' life satisfaction correlates with the overall health and longevity of their populations. Let's dive deeper into this correlation and explore the trends across continents.
+    """)
+
   plt.figure(figsize = [200,200])
   fig = px.scatter(df_2023,
                   x = 'Life Ladder',
@@ -756,6 +828,55 @@ if page == pages[2] :
                   )
   st.plotly_chart(fig);
 
+  st.markdown("""
+    ### Conclusion
+
+    **Asia** shows variability, suggesting that the relationship between life expectancy and happiness is influenced by complex and diverse factors across countries in the region.  
+    **Europe**, **Americas**, and **Oceania** have a strong positive correlation between high life satisfaction and high healthy life expectancy, indicating that these regions have generally favorable living conditions.  
+    **Africa** faces significant challenges, with lower life expectancy and lower life satisfaction.  
+
+    ---
+    """)
+  
+  import pandas as pd
+  import plotly.express as px
+
+
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+
+  st.markdown("""
+    ### Exploring the Role of Social Support in Happiness
+
+    We also wanted to understand the role of **Social Support** in **Happiness**. The following graph was built to explore the relationship between **life satisfaction** (measured by the **Life Ladder**) and **social support**.
+    """)
+
+  plt.figure(figsize=[400,400])
+  fig = px.scatter(df_all, x="Life Ladder", y="Social support",
+                  hover_name="Healthy life expectancy at birth", title="Life Ladder vs social support",trendline="ols")
+  st.plotly_chart(fig);
+  
+  st.markdown("""
+    ### Conclusion
+
+    The graph indicates that **social support** plays a significant role in **life satisfaction**. Countries with stronger social networks tend to have higher levels of happiness, reinforcing the importance of relationships and community support for well-being.
+
+    **Interpretation:**
+    - **Positive Correlation:** The upward trend of the fitted line suggests a positive correlation between life satisfaction (Life Ladder) and social support. This means that, generally, people with higher life satisfaction report stronger social support.
+    
+    **Data Distribution:**
+    - Most data points are concentrated in the middle-to-upper range of the Life Ladder (around 4 to 7) and social support (0.6 to 1).
+    - There is more spread in social support for lower Life Ladder values, but as life satisfaction increases, social support tends to be more consistently high.
+
+    ---
+    """)
+
+  st.markdown("""
+    ### What Does Happiness Look Like When Mapped?
+
+    In this section, we will map the Life Ladder Index to visualize the global distribution of happiness. This allows us to observe regional patterns and see how life satisfaction varies across different countries.
+    """)
+  
   #WHAT DOES HAPPINESS LOOK LIKE WHEN MAPPED
 
   # Use the necessary columns without modifying the original dataset
@@ -780,70 +901,17 @@ if page == pages[2] :
   # Display the map
   st.plotly_chart(fig)
 
-  # Count the number of unique countries per year
-  countries_per_year = df_all.groupby('year')['Country name'].nunique().reset_index()
-  countries_per_year.rename(columns={'Country name': 'Number of Countries'}, inplace=True)
+  st.markdown("""
+    ### Conclusion:
 
-  # Plot the data
-  fig = px.line(countries_per_year, x='year', y='Number of Countries',
-                title="Number of Countries in Dataset Over the Years",
-                labels={'year': 'Year', 'Number of Countries': 'Number of Countries'},
-                markers=True)
-  fig.update_traces(line=dict(width=3), marker=dict(size=8))
+    This map summarizes our earlier analysis, illustrating global satisfaction levels. Darker blue shades represent happier nations, while darker red shades indicate less happy ones. **Nordic countries**, led by **Finland**, stand out as the happiest. Conversely, **Africa** as a whole appears generally unhappy, though **Afghanistan** in **Asia** recorded the lowest happiness score.
 
-  # Update the x-axis show years
-  fig.update_xaxes(type='category')
-
-  # Show the plot
-  st.plotly_chart(fig)
-
-  #MISSING DATA PER COUNTRY BY YEAR
-
-  from matplotlib.colors import ListedColormap
-
-  # Check for missing values by country and year
-  missing_data = df_all.pivot_table(index='Country name', columns='year', aggfunc='size', fill_value=0)
-
-  # Calculate the number of missing values per country per year
-  missing_counts = df_all.groupby(['Country name', 'year']).size().unstack(fill_value=0)
-
-  limited_countries = missing_counts[(missing_counts > 0).sum(axis=1) <= 3].index
-
-  # Display a summary of missing counts
-  #print("Missing Data Summary (Presence of Data per Year for Each Country):")
-  #print(missing_counts)
-
-  # Check countries with inconsistent appearances across years
-  inconsistent_countries = missing_counts[(missing_counts == 0).any(axis=1)]
-
-  custom_cmap = ListedColormap(["#7EE2E1", "#FE4F57"])
-
-  # Create a heatmap to see missing values
-  plt.figure(figsize=(15, 10))
-  ax = sns.heatmap(missing_counts == 0, cmap=custom_cmap, cbar_kws={'label': 'Missing Data'},
-              xticklabels=True, yticklabels=True)
-
-  new_yticks = [name if name in limited_countries else "" for name in missing_counts.index]
-  ax.set_yticklabels(new_yticks, fontsize=10)
-
-  plt.title("Heatmap of Missing Data (Countries by Year)", fontsize=16)
-  plt.xlabel("Year", fontsize=14)
-  plt.ylabel("Countries", fontsize=14)
-  st.pyplot(plt)
-
-  #Analysis: the low number of countries in 2005, combined with the significant amount of missing data for that year, led us to decide to exclude 2005 from our analysis
-
-  import pandas as pd
-  import plotly.express as px
+    ---
+    """)
 
 
-  import matplotlib.pyplot as plt
-  import seaborn as sns
 
-  plt.figure(figsize=[400,400])
-  fig = px.scatter(df_all, x="Life Ladder", y="Social support",
-                  hover_name="Healthy life expectancy at birth", title="Life Ladder vs social support",trendline="ols")
-  st.plotly_chart(fig);
+
 
 
 if page == pages[3] : 
