@@ -1112,6 +1112,10 @@ if page == pages[3] :
   print(f"R² Score (Train): {r2_linear_train:.4f}")
 
 
+
+
+ 
+
   # Feature Importance for Linear Regression (Coefficients)
   coefficients = pd.DataFrame({
       'Feature': X_train_encoded.columns,  # Feature names from the encoded training set
@@ -1330,6 +1334,28 @@ if page == pages[3] :
   print(f"    Random Forest - Train MAE: {mae_rf_train:.4f}, Test MAE: {mae_rf_test:.4f}, "
         f"Train MSE: {mse_rf_train:.4f}, Test MSE: {mse_rf_test:.4f}, "
         f"Train R²: {r2_rf_train:.4f}, Test R²: {r2_rf_test:.4f}")
+
+
+# Create a summary DataFrame for model performance
+  performance_data = {
+    'Model': ['Linear Regression', 'Decision Tree', 'Random Forest'],
+    'Train MAE': [mae_linear_train, mae_tree_train, mae_rf_train],
+    'Test MAE': [mae_linear_test, mae_tree_test, mae_rf_test],
+    'Train R²': [r2_linear_train, r2_tree_train, r2_rf_train],
+    'Test R²': [r2_linear_test, r2_tree_test, r2_rf_test]
+  }
+
+  performance_df = pd.DataFrame(performance_data)
+
+# Round the values for cleaner display (optional)
+  performance_df = performance_df.round(4)
+
+# Display the table in Streamlit
+  st.markdown("### 📊 Model Performance Comparison")
+  st.table(performance_df)  # or use st.dataframe(performance_df) for interactivity
+
+
+
 
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
