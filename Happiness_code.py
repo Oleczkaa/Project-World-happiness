@@ -920,7 +920,7 @@ if page == pages[2] :
 
 
 if page == pages[3] : 
-  st.markdown("<h3 style='color: #6E66CC;'>Modeling</h3>", unsafe_allow_html=True)
+ # st.markdown("<h3 style='color: #6E66CC;'>Modeling</h3>", unsafe_allow_html=True)
   
   df_all['filled_percentage'] = df_all.notna().sum(axis=1) / len(df_all.columns)
 
@@ -1134,7 +1134,30 @@ if page == pages[3] :
   #This suggests that there might be non-linear relationships or factors influencing "Life Ladder" that the linear model can't capture.
 
   #Scatterplot
-  import matplotlib.pyplot as plt
+ 
+  st.write("")
+
+  st.markdown("### Models Presentation:")
+  st.write("")
+  st.write("")
+
+  st.markdown("""
+    **Linear Regression:** The model identifies **Log GDP per capita**, **Region_Central America**, and **Positive Affect** 
+    as the most influential factors on happiness, highlighting both economic and emotional-social 
+    aspects. **Social Support** and **Freedom to make life choices** also play significant roles. 
+    The model shows a negative association with Region_Northern America and Negative Affect, 
+    suggesting lower happiness in those regions or emotional states. 
+    """)
+  
+  st.markdown("""
+    **LINEAR REGRESSION:** The scatter plot below demonstrates the alignment between the model's predictions and the actual values. 
+    Each dot represents a predicted value against the corresponding actual value, and the closer the dots are 
+    to the **Ideal Fit** line (the dashed diagonal line), the more accurate the model's predictions. In this case, 
+    the plot shows a strong correlation, indicating that the model is effectively predicting the target variable, 
+    with minimal deviation from the ideal line. The tight clustering of the dots around the ideal line suggests that 
+    the model is making relatively accurate predictions for the majority of the data points.
+    """)
+  
 
   fig, ax = plt.subplots(figsize=(8, 6))  # Set figure size (width, height)
 
@@ -1164,6 +1187,18 @@ if page == pages[3] :
   #joblib.dump(decision_tree_model, 'newest_decision_tree_model.pkl')  # Save the model to a file
   #print("Model saved successfully!")
   
+  st.markdown("---")
+
+  st.markdown("""
+    **DECISION TREE:** The Decision Tree visualization below showcases how different features interact and contribute to predicting the 
+    target variable. Each decision node represents a decision based on a feature, with branches leading to different 
+    outcomes. This model helps us understand the relative importance of each feature in making predictions. 
+    For instance, **Log GDP per capita** plays a central role in determining the target value, while **Social support** 
+    and **Positive affect** further refine the prediction. The model’s structure highlights how these features 
+    interact at different stages of the decision process to drive the final prediction.
+    """)
+  st.write("") 
+  st.write("")
   #Load the saved model
   decision_tree_model = joblib.load('newest_decision_tree_model.pkl')
   
@@ -1213,8 +1248,23 @@ if page == pages[3] :
             filled=True,
             rounded=True,
             fontsize=12)
-  plt.title("Simplified Decision Tree Visualization")
+  plt.title("Decision Tree Visualization")
   st.pyplot(plt)
+  st.markdown("---")
+
+
+  st.markdown("""
+    **RANDOM FOREST:** The Random Forest model places the highest importance on **Log GDP per capita**, 
+    recognizing it as the most influential predictor for the target variable. 
+    **Social Support** and **Healthy Life Expectancy** are also key features that play 
+    significant roles in the model's predictions, but they are slightly less important 
+    compared to Log GDP per capita.
+    """)
+  st.markdown("---")
+  
+
+  st.markdown("""
+    ### Feature Importance Comparison""")
 
   #Start training RandomForest
 
@@ -1335,7 +1385,25 @@ if page == pages[3] :
         f"Train MSE: {mse_rf_train:.4f}, Test MSE: {mse_rf_test:.4f}, "
         f"Train R²: {r2_rf_train:.4f}, Test R²: {r2_rf_test:.4f}")
 
+  st.write("")
+  st.markdown("""
+    Across the three models—Linear Regression, Decision Tree, and Random Forest—**Log GDP per capita** consistently 
+    emerges as the dominant predictor of life satisfaction, emphasizing the importance of economic wealth. 
 
+    **Social support** and **Positive affect** also play key roles in all models, highlighting the significance of emotional well-being 
+    and social connections.
+
+    The Decision Tree model places substantial weight on **Positive affect**, while **Random Forest** gives more importance to 
+    **health-related factors** like **Healthy life expectancy**. 
+
+    While **Generosity** and **Freedom to make life choices** are considered, they are less influential than the core economic 
+    and emotional factors.
+
+    Overall, economic factors (especially **Log GDP per capita**) and emotional well-being (such as **Social support** and 
+    **Positive affect**) are the key drivers of life satisfaction across all models.
+    """)
+  st.markdown("---")
+    
 # Create a summary DataFrame for model performance
   performance_data = {
     'Model': ['Linear Regression', 'Decision Tree', 'Random Forest'],
@@ -1354,7 +1422,51 @@ if page == pages[3] :
   st.markdown("### 📊 Model Performance Comparison")
   st.table(performance_df)  # or use st.dataframe(performance_df) for interactivity
 
+  st.write("")
+  st.markdown("""
 
+    **Linear Regression:**
+
+    The Linear Regression model demonstrates strong performance, 
+    with a good balance between training and testing. 
+    The relatively small difference between training and testing error 
+    suggests that the model generalizes well without overfitting. 
+    The model explains a large portion of the variance in the data, 
+    indicating it is effective at capturing the relationship between 
+    the features and life satisfaction.
+
+    **Decision Tree:**
+ 
+    The Decision Tree model performs well but shows a slight overfitting tendency, 
+    as indicated by the higher error on the test set compared to the training set. 
+    While it does a good job explaining the variance in the training data, 
+    it struggles a bit more when generalizing to unseen data. 
+    This is a common trait of decision trees, which are highly sensitive 
+    to the training data but can struggle with generalization if not properly tuned.
+
+    **Random Forest:**
+ 
+    The Random Forest model performs exceptionally well, particularly in terms of 
+    its ability to generalize to new, unseen data. While it may have overfitted the 
+    training set (indicated by perfect fit on training data), its performance on the test set 
+    remains strong. This suggests that despite overfitting on the training data, 
+    the ensemble approach of Random Forest leads to robust generalization on the test set, 
+    capturing the complex relationships in the data effectively.
+
+    ---
+
+    ### Overall Summary:
+
+    All three models perform well, but they show different characteristics:
+
+    - **Linear Regression** has a strong, stable performance with a small gap between training and testing metrics, indicating it generalizes well.
+
+    - **Decision Tree** has a small amount of overfitting, with better performance on the training data than on the test data, but still performs decently.
+
+    - **Random Forest** has the highest performance on the test data, with a perfect fit on the training set (which may indicate overfitting), but it still generalizes exceptionally well.
+
+    In general, if we want a model with high interpretability and less overfitting, Linear Regression might be the better choice. If predictive power is the most important, Random Forest seems to be the top performer, with the highest R² on the test set.
+    """)
 
 
 from sklearn.model_selection import GridSearchCV
@@ -1362,3 +1474,6 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression
 
+
+ 
+    
