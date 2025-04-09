@@ -1141,13 +1141,6 @@ if page == pages[3] :
   st.write("")
   st.write("")
 
-  st.markdown("""
-    **Linear Regression:** The model identifies **Log GDP per capita**, **Region_Central America**, and **Positive Affect** 
-    as the most influential factors on happiness, highlighting both economic and emotional-social 
-    aspects. **Social Support** and **Freedom to make life choices** also play significant roles. 
-    The model shows a negative association with Region_Northern America and Negative Affect, 
-    suggesting lower happiness in those regions or emotional states. 
-    """)
   
   st.markdown("""
     **LINEAR REGRESSION:** The scatter plot below demonstrates the alignment between the model's predictions and the actual values. 
