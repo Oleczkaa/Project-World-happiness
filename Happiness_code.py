@@ -922,7 +922,7 @@ if page == pages[2] :
       locations="Country name",  # Column with country names
       locationmode="country names",  # Match country names to Plotly's list
       color="Life Ladder",  # Happiness metric for coloring
-      title="World Happiness Map (Life Ladder Scores)",
+      title="World Happiness Map (Average Life Ladder Scores)",
       color_continuous_scale=px.colors.sequential.RdBu,  # Customizable color scale, Plasma, RdBu is good
       labels={"Life Ladder": "Happiness Score"},  # Tooltip label customization
   )
