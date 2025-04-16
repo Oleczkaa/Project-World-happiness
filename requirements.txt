@@ -7,5 +7,4 @@ joblib
 scikit-learn
 plotly
 statsmodels
-graphviz
 

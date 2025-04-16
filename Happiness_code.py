@@ -1235,31 +1235,14 @@ if page == pages[3] :
   # Simpler Visualization of the Decision Tree
   # ================================
 
-  import os
-  from sklearn.tree import export_graphviz
-  import graphviz
-  import streamlit as st
-
-  @st.cache_resource
-  def render_and_save_tree(model, feature_names, output_file="tree", max_depth=3):
-    dot_data = export_graphviz(
-        model,
-        out_file=None,
-        feature_names=feature_names,
-        filled=True,
-        rounded=True,
-        max_depth=max_depth
-    )
-    graph = graphviz.Source(dot_data)
-    graph.format = 'png'
-    graph.render(output_file, cleanup=True)
-    return output_file + ".png"
-
-  # Display in Streamlit
-  if st.checkbox("Show Decision Tree"):
-    tree_image_path = render_and_save_tree(decision_tree_model, X_train_encoded.columns)
-    st.image(tree_image_path, caption="Decision Tree Visualization", use_column_width=True)
-
+  plt.figure(figsize=(12, 8))
+  plot_tree(decision_tree_model,
+            feature_names=X_train_encoded.columns,
+            filled=True,
+            rounded=True,
+            fontsize=12)
+  plt.title("Decision Tree Visualization")
+  st.pyplot(plt)
   st.markdown("---")
 
 
