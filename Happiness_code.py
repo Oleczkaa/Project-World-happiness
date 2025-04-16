@@ -339,62 +339,67 @@ if page == pages[2] :
   df_2023 = df_all[df_all['year'] == 2023]
 
   #show Boxplots with nearly same scale
-  fig, ax = plt.subplots(1,3, figsize=(12, 6))
+  if not os.path.exists("comparison_indicators_2023.svg"):
+    print("\nGenerating new picture of decision tree")
+    fig, ax = plt.subplots(1,3, figsize=(12, 6))
 
-  box1 = ax[0].boxplot(
-    [df_2023['Life Ladder'], df_2023['Log GDP per capita'].dropna()],
-     patch_artist=True,
-     widths = 0.3)
+    box1 = ax[0].boxplot(
+      [df_2023['Life Ladder'], df_2023['Log GDP per capita'].dropna()],
+      patch_artist=True,
+      widths = 0.3)
 
-  #show Boxplots with nearly same scale
-  box2 = ax[1].boxplot(
-    [df_2023['Healthy life expectancy at birth'].dropna()],
-    patch_artist=True,
-    widths = 0.15)
+    #show Boxplots with nearly same scale
+    box2 = ax[1].boxplot(
+      [df_2023['Healthy life expectancy at birth'].dropna()],
+      patch_artist=True,
+      widths = 0.15)
 
-  #show Boxplots with nearly same scale
-  box3 = ax[2].boxplot(
-    [df_2023[col].dropna() for col in [
-        'Social support', 'Freedom to make life choices', 'Generosity',
-        'Perceptions of corruption', 'Positive affect', 'Negative affect'
-    ]],
-     patch_artist=True,
-     widths = 0.8)
+    #show Boxplots with nearly same scale
+    box3 = ax[2].boxplot(
+      [df_2023[col].dropna() for col in [
+          'Social support', 'Freedom to make life choices', 'Generosity',
+          'Perceptions of corruption', 'Positive affect', 'Negative affect'
+      ]],
+      patch_artist=True,
+      widths = 0.8)
 
-  #Title
-  fig.suptitle("Comparison of Indicators from 2023", fontsize=18, fontweight='bold')
+    #Title
+    fig.suptitle("Comparison of Indicators from 2023", fontsize=18, fontweight='bold')
 
-  #Subplot Titels
+    #Subplot Titels
 
-  titles = ['Life Ladder & Log GDP per capita', 'Healthy life expectancy at birth', 'Other Metrics']
-  xticks = [ ['Life Ladder', 'Log GDP per capita'], ['Healthy life expectancy at birth'],
-    ['Social Support', 'Freedom', 'Generosity', 'Corruption', 'Positive', 'Negative']
-  ]
+    titles = ['Life Ladder & Log GDP per capita', 'Healthy life expectancy at birth', 'Other Metrics']
+    xticks = [ ['Life Ladder', 'Log GDP per capita'], ['Healthy life expectancy at birth'],
+      ['Social Support', 'Freedom', 'Generosity', 'Corruption', 'Positive', 'Negative']
+    ]
 
-  for i, ax_i in enumerate(ax):
-    ax_i.set_title(titles[i])
-    ax_i.set_xticklabels(xticks[i], rotation=45, ha='right')
+    for i, ax_i in enumerate(ax):
+      ax_i.set_title(titles[i])
+      ax_i.set_xticklabels(xticks[i], rotation=45, ha='right')
 
-  # Coloring Boxplot – Styling
+    # Coloring Boxplot – Styling
 
-  def style_boxplot(box, facecolor, edgecolor, linewidth, flier_color, median_color, whisker_color):
-    for patch in box['boxes']:
-        patch.set_facecolor(facecolor)
-        patch.set_edgecolor(edgecolor)
-        patch.set_linewidth(linewidth)
-    for flier in box['fliers']:
-        flier.set(marker='o', markerfacecolor=flier_color, alpha=0.5)
-    for median in box['medians']:
-        median.set(color=median_color, linewidth=2)
-    for whisker in box['whiskers']:
-        whisker.set(color=whisker_color, linewidth=1, linestyle='--')
+    def style_boxplot(box, facecolor, edgecolor, linewidth, flier_color, median_color, whisker_color):
+      for patch in box['boxes']:
+          patch.set_facecolor(facecolor)
+          patch.set_edgecolor(edgecolor)
+          patch.set_linewidth(linewidth)
+      for flier in box['fliers']:
+          flier.set(marker='o', markerfacecolor=flier_color, alpha=0.5)
+      for median in box['medians']:
+          median.set(color=median_color, linewidth=2)
+      for whisker in box['whiskers']:
+          whisker.set(color=whisker_color, linewidth=1, linestyle='--')
 
-  # Apply styling
-  style_boxplot(box1, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
-  style_boxplot(box2, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
-  style_boxplot(box3, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
-  st.pyplot(fig)
-  
+    # Apply styling
+    style_boxplot(box1, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
+    style_boxplot(box2, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
+    style_boxplot(box3, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
+    st.pyplot(fig)
+    plt.savefig('comparison_indicators_2023.svg',format='svg',bbox_inches = "tight")
+
+  st.image("comparison_indicators_2023.svg", use_container_width =True)
+    
  
   
   with st.expander("🔍 Interpretation of 2023 Boxplot"):
