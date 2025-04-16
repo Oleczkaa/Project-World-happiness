@@ -772,50 +772,58 @@ if page == pages[2] :
   region_america = region_per_year[region_per_year['Region'].isin(['South America', 'Northern America', 'Central America'])]
   region_other = region_per_year[region_per_year['Region'].isin(['Australia and New Zealand', 'Caribbean'])]
 
-  fig, axes = plt.subplots(2, 3, figsize=(20, 12))
+  if not os.path.exists("regions_continent.svg"):
+    print("\nGenerating new picture of decision tree")
+    fig, axes = plt.subplots(2, 3, figsize=(20, 12))
 
-  #order of the regions
-  europe_order = ['Western Europe', 'Northern Europe','Southern Europe','Eastern Europe']
-  africa_order = ['Northern Africa','Southern Africa','Eastern Africa', 'Western Africa', 'Middle Africa']
-  asia_order = ['Central Asia','Eastern Asia','Western Asia', 'South Eastern Asia','Southern Asia']
-  america_order = ['Northern America', 'Central America','South America']
-  other_order = ['Australia and New Zealand', 'Caribbean']
-
-
-  #show Lineplot
-
-  sns.lineplot(ax=axes[0, 0], data=mean_per_year, x='year', y='Life Ladder', linewidth=2, marker='o', color = '#6E66CC') #used above for loop instead of this code
-  #sns.lineplot(ax=axes[0, 1], data=region_per_year, x='year', y='Life Ladder', hue = 'Region', marker='o')
-  sns.lineplot(ax=axes[0, 1], data=region_europe, x='year', y='Life Ladder', linewidth=2, hue = 'Region', hue_order=europe_order, marker='o', palette=region_colors)
-  sns.lineplot(ax=axes[0, 2], data=region_africa, x='year', y='Life Ladder', linewidth=2, hue = 'Region', hue_order=africa_order, marker='o', palette=region_colors)
-  sns.lineplot(ax=axes[1, 0], data=region_asia, x='year', y='Life Ladder', linewidth=2, hue = 'Region', hue_order=asia_order, marker='o', palette=region_colors)
-  sns.lineplot(ax=axes[1, 1], data=region_america, x='year', y='Life Ladder', linewidth=2, hue = 'Region', marker='o', hue_order=america_order, palette=region_colors)
-  sns.lineplot(ax=axes[1, 2], data=region_other, x='year', y='Life Ladder', linewidth=2, hue = 'Region', hue_order = other_order, marker='o', palette=region_colors)
-
-  titles = [
-      "World – Mean Life Ladder Over Years\n\n\n",
-      "Europe – Mean Life Ladder by Region\n\n\n",
-      "Africa – Mean Life Ladder by Region\n\n\n",
-      "Asia – Mean Life Ladder by Region\n\n\n",
-      "America – Mean Life Ladder by Region\n\n\n",
-      "Other Regions – Mean Life Ladder\n\n\n"
-  ]
-
-  life_ladder_avg = df_all['Life Ladder'].mean()
-
-  # print average Line into the Plot
-  for ax in axes.flat:
-      ax.axhline(y=life_ladder_avg, color='black', linestyle='--', linewidth=1.5, label='Average Life Ladder')
-      ax.legend(loc='upper right')
-
-  for ax, title in zip(axes.flat, titles):
-      ax.legend(loc='upper center', bbox_to_anchor=(0.5, 1.14), ncol=3, frameon=False)
-      ax.set_title(title, fontsize=14, fontweight = 'bold')
-  #axes[1, 0].legend(loc='lower left')
+    #order of the regions
+    europe_order = ['Western Europe', 'Northern Europe','Southern Europe','Eastern Europe']
+    africa_order = ['Northern Africa','Southern Africa','Eastern Africa', 'Western Africa', 'Middle Africa']
+    asia_order = ['Central Asia','Eastern Asia','Western Asia', 'South Eastern Asia','Southern Asia']
+    america_order = ['Northern America', 'Central America','South America']
+    other_order = ['Australia and New Zealand', 'Caribbean']
 
 
-  plt.tight_layout()
-  st.pyplot(plt);
+    #show Lineplot
+
+    sns.lineplot(ax=axes[0, 0], data=mean_per_year, x='year', y='Life Ladder', linewidth=2, marker='o', color = '#6E66CC') #used above for loop instead of this code
+    #sns.lineplot(ax=axes[0, 1], data=region_per_year, x='year', y='Life Ladder', hue = 'Region', marker='o')
+    sns.lineplot(ax=axes[0, 1], data=region_europe, x='year', y='Life Ladder', linewidth=2, hue = 'Region', hue_order=europe_order, marker='o', palette=region_colors)
+    sns.lineplot(ax=axes[0, 2], data=region_africa, x='year', y='Life Ladder', linewidth=2, hue = 'Region', hue_order=africa_order, marker='o', palette=region_colors)
+    sns.lineplot(ax=axes[1, 0], data=region_asia, x='year', y='Life Ladder', linewidth=2, hue = 'Region', hue_order=asia_order, marker='o', palette=region_colors)
+    sns.lineplot(ax=axes[1, 1], data=region_america, x='year', y='Life Ladder', linewidth=2, hue = 'Region', marker='o', hue_order=america_order, palette=region_colors)
+    sns.lineplot(ax=axes[1, 2], data=region_other, x='year', y='Life Ladder', linewidth=2, hue = 'Region', hue_order = other_order, marker='o', palette=region_colors)
+
+    titles = [
+        "World – Mean Life Ladder Over Years\n\n\n",
+        "Europe – Mean Life Ladder by Region\n\n\n",
+        "Africa – Mean Life Ladder by Region\n\n\n",
+        "Asia – Mean Life Ladder by Region\n\n\n",
+        "America – Mean Life Ladder by Region\n\n\n",
+        "Other Regions – Mean Life Ladder\n\n\n"
+    ]
+
+    life_ladder_avg = df_all['Life Ladder'].mean()
+
+    # print average Line into the Plot
+    for ax in axes.flat:
+        ax.axhline(y=life_ladder_avg, color='black', linestyle='--', linewidth=1.5, label='Average Life Ladder')
+        ax.legend(loc='upper right')
+
+    for ax, title in zip(axes.flat, titles):
+        ax.legend(loc='upper center', bbox_to_anchor=(0.5, 1.14), ncol=3, frameon=False)
+        ax.set_title(title, fontsize=14, fontweight = 'bold')
+    #axes[1, 0].legend(loc='lower left')
+
+
+    plt.tight_layout()
+    st.pyplot(plt);
+    plt.savefig('regions_continent.svg',format='svg',bbox_inches = "tight")
+
+  st.image("regions_continent.svg", use_container_width =True)
+
+
+  #st.image("decisiontree.svg", use_container_width =True)
 
   st.markdown("""
     ### 📊 Conclusion
