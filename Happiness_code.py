@@ -1373,30 +1373,36 @@ if page == pages[3] :
   top_10_rf_importances = rf_sorted_importances[:10]
 
   # Create subplots for side-by-side comparison
-  fig, axes = plt.subplots(1, 3, figsize=(18, 6))
 
-  # Linear Regression Feature Importance Plot (based on coefficients)
-  sns.barplot(x='Coefficient', y='Feature', data=top_10_linear, ax=axes[0], palette='viridis', hue='Feature')
-  axes[0].set_title('Feature Importance for Linear Regression')
-  axes[0].set_xlabel('Coefficient Value', fontweight='bold')
-  axes[0].set_ylabel('Feature', fontweight='bold')
+  if not os.path.exists("feature_importance.svg"):
+    print("\nGenerating new picture of decision tree")
+    fig, axes = plt.subplots(1, 3, figsize=(18, 6))
 
-  # Decision Tree Feature Importance Plot
-  sns.barplot(x='Importance', y='Feature', data=top_10_tree, ax=axes[1], palette='viridis', hue='Feature')
-  axes[1].set_title('Feature Importance for Decision Tree')
-  axes[1].set_xlabel('Importance', fontweight='bold')
-  axes[1].set_ylabel('Feature', fontweight='bold')
+    # Linear Regression Feature Importance Plot (based on coefficients)
+    sns.barplot(x='Coefficient', y='Feature', data=top_10_linear, ax=axes[0], palette='viridis', hue='Feature')
+    axes[0].set_title('Feature Importance for Linear Regression')
+    axes[0].set_xlabel('Coefficient Value', fontweight='bold')
+    axes[0].set_ylabel('Feature', fontweight='bold')
 
-  # Random Forest Feature Importance Plot
-  sns.barplot(x=top_10_rf_importances, y=top_10_rf_features, ax=axes[2], palette='viridis')
-  axes[2].set_title('Feature Importance for Random Forest')
-  axes[2].set_xlabel('Importance', fontweight='bold')
-  axes[2].set_ylabel('Feature', fontweight='bold')
+    # Decision Tree Feature Importance Plot
+    sns.barplot(x='Importance', y='Feature', data=top_10_tree, ax=axes[1], palette='viridis', hue='Feature')
+    axes[1].set_title('Feature Importance for Decision Tree')
+    axes[1].set_xlabel('Importance', fontweight='bold')
+    axes[1].set_ylabel('Feature', fontweight='bold')
 
-  # Adjust layout for better spacing
-  plt.subplots_adjust(wspace=0.5)  # Increase space between the subplots
-  plt.tight_layout()
-  st.pyplot(plt)
+    # Random Forest Feature Importance Plot
+    sns.barplot(x=top_10_rf_importances, y=top_10_rf_features, ax=axes[2], palette='viridis')
+    axes[2].set_title('Feature Importance for Random Forest')
+    axes[2].set_xlabel('Importance', fontweight='bold')
+    axes[2].set_ylabel('Feature', fontweight='bold')
+
+    # Adjust layout for better spacing
+    plt.subplots_adjust(wspace=0.5)  # Increase space between the subplots
+    plt.tight_layout()
+    #st.pyplot(plt)
+    plt.savefig('feature_importance.svg',format='svg',bbox_inches = "tight")
+
+  st.image("feature_importance.svg", use_container_width =True)
 
   
   #Model performance comparison
