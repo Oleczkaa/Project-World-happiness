@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import joblib
+import os
 
 df_all = pd.read_csv("df_all.csv")
 df_clean = pd.read_csv("df_clean.csv")
@@ -395,7 +396,7 @@ if page == pages[2] :
     style_boxplot(box1, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
     style_boxplot(box2, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
     style_boxplot(box3, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
-    st.pyplot(fig)
+    #st.pyplot(fig)
     plt.savefig('comparison_indicators_2023.svg',format='svg',bbox_inches = "tight")
 
   st.image("comparison_indicators_2023.svg", use_container_width =True)
@@ -817,7 +818,7 @@ if page == pages[2] :
 
 
     plt.tight_layout()
-    st.pyplot(plt);
+    #st.pyplot(plt);
     plt.savefig('regions_continent.svg',format='svg',bbox_inches = "tight")
 
   st.image("regions_continent.svg", use_container_width =True)
@@ -1179,16 +1180,20 @@ if page == pages[3] :
     the model is making relatively accurate predictions for the majority of the data points.
     """)
   
+  if not os.path.exists("actual_vs_prediction.svg"):
+    print("\nGenerating new picture of decision tree")
+    fig, ax = plt.subplots(figsize=(8, 6))  # Set figure size (width, height)
 
-  fig, ax = plt.subplots(figsize=(8, 6))  # Set figure size (width, height)
+    plt.scatter(y_test, y_pred_linear_test, label="Predictions vs actual", color='#6E66CC', edgecolor='black', alpha=0.7)
+    plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], color="black", linewidth=1, linestyle="--", label="Ideal Fit")
+    plt.xlabel("Actual Values", family = 'monospace')
+    plt.ylabel("Prediction", family = 'monospace')
+    plt.title("Actual Values vs. Prediction", fontsize=18, fontweight='bold')
+    plt.legend()
+    #st.pyplot(fig)
+    plt.savefig('actual_vs_prediction.svg',format='svg',bbox_inches = "tight")
 
-  plt.scatter(y_test, y_pred_linear_test, label="Predictions vs actual", color='#6E66CC', edgecolor='black', alpha=0.7)
-  plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], color="black", linewidth=1, linestyle="--", label="Ideal Fit")
-  plt.xlabel("Actual Values", family = 'monospace')
-  plt.ylabel("Prediction", family = 'monospace')
-  plt.title("Actual Values vs. Prediction", fontsize=18, fontweight='bold')
-  plt.legend()
-  st.pyplot(fig)
+  st.image("actual_vs_prediction.svg", use_container_width =True)
 
   # Decision Tree Model - Purpose: Predict the actual numeric value of the "Life Ladder" variable (continuous target).
 
