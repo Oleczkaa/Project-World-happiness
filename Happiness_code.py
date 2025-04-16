@@ -1242,7 +1242,9 @@ if page == pages[3] :
             rounded=True,
             fontsize=12)
   plt.title("Decision Tree Visualization")
-  st.pyplot(plt)
+  # st.pyplot(plt)
+  st.image("decisiontree.png", use_container_width =True)
+
   st.markdown("---")
 
 
