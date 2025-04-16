@@ -8,6 +8,7 @@ import os
 
 df_all = pd.read_csv("df_all.csv")
 df_clean = pd.read_csv("df_clean.csv")
+df = pd.read_csv("df.csv")
 
 st.title("Project: World Happiness")
 st.sidebar.title("Table of contents")
@@ -914,7 +915,7 @@ if page == pages[2] :
   #WHAT DOES HAPPINESS LOOK LIKE WHEN MAPPED
 
   # Use the necessary columns without modifying the original dataset
-  map_data = df_all[['Country name', 'Life Ladder']]
+  map_data = df[['Country name', 'Life Ladder']]
 
   # Create a choropleth map for Life Ladder scores
   fig = px.choropleth(
