@@ -1236,6 +1236,8 @@ if page == pages[3] :
   # ================================
   import os
   if not os.path.exists("decisiontree.svg"):
+    print("\nGenerating new picture of decision tree")
+  
     plt.figure(figsize=(12, 8))
     plot_tree(decision_tree_model,
             feature_names=X_train_encoded.columns,
