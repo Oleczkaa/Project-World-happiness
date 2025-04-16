@@ -190,61 +190,66 @@ if page == pages[2] :
   st.write("")
   st.write("")
 
-  fig2, ax2 = plt.subplots(1,3, figsize=(12, 6))
+  if not os.path.exists("comparison_indicators_2005_2023.svg"):
+    print("\nGenerating new picture of decision tree")
+    fig2, ax2 = plt.subplots(1,3, figsize=(12, 6))
 
-  box4 = ax2[0].boxplot(
-        [df_all['Life Ladder'], df_all['Log GDP per capita'].dropna()],
-        patch_artist=True,
-        widths = 0.3)
+    box4 = ax2[0].boxplot(
+          [df_all['Life Ladder'], df_all['Log GDP per capita'].dropna()],
+          patch_artist=True,
+          widths = 0.3)
 
-    #show Boxplots with nearly same scale
-  box5 = ax2[1].boxplot(
-        [df_all['Healthy life expectancy at birth'].dropna()],
-        patch_artist=True,
-        widths = 0.15)
+      #show Boxplots with nearly same scale
+    box5 = ax2[1].boxplot(
+          [df_all['Healthy life expectancy at birth'].dropna()],
+          patch_artist=True,
+          widths = 0.15)
 
-    #show Boxplots with nearly same scale
-  box6 = ax2[2].boxplot(
-        [df_all['Social support'].dropna(),
-        df_all['Freedom to make life choices'].dropna(),
-        df_all['Generosity'].dropna(),
-        df_all['Perceptions of corruption'].dropna(),
-        df_all['Positive affect'].dropna(),
-        df_all['Negative affect'].dropna()],
-        patch_artist=True,
-        widths = 0.8)
+      #show Boxplots with nearly same scale
+    box6 = ax2[2].boxplot(
+          [df_all['Social support'].dropna(),
+          df_all['Freedom to make life choices'].dropna(),
+          df_all['Generosity'].dropna(),
+          df_all['Perceptions of corruption'].dropna(),
+          df_all['Positive affect'].dropna(),
+          df_all['Negative affect'].dropna()],
+          patch_artist=True,
+          widths = 0.8)
 
-    #Title
-  fig2.suptitle("Comparison of Indicators from 2005–2023", fontsize=18, fontweight='bold')
+      #Title
+    fig2.suptitle("Comparison of Indicators from 2005–2023", fontsize=18, fontweight='bold')
 
-  titles = ['Life Ladder & Log GDP per capita', 'Healthy life expectancy at birth', 'Other Metrics']
-  xticks = [ ['Life Ladder', 'Log GDP per capita'], ['Healthy life expectancy at birth'],
-        ['Social Support', 'Freedom', 'Generosity', 'Corruption', 'Positive', 'Negative']
-    ]
+    titles = ['Life Ladder & Log GDP per capita', 'Healthy life expectancy at birth', 'Other Metrics']
+    xticks = [ ['Life Ladder', 'Log GDP per capita'], ['Healthy life expectancy at birth'],
+          ['Social Support', 'Freedom', 'Generosity', 'Corruption', 'Positive', 'Negative']
+      ]
 
-  for i, ax_i in enumerate(ax2):
-        ax_i.set_title(titles[i])
-        ax_i.set_xticklabels(xticks[i], rotation=45, ha='right')
+    for i, ax_i in enumerate(ax2):
+          ax_i.set_title(titles[i])
+          ax_i.set_xticklabels(xticks[i], rotation=45, ha='right')
 
-    # Coloring Boxplot – Styling
+      # Coloring Boxplot – Styling
 
-  def style_boxplot(box, facecolor, edgecolor, linewidth, flier_color, median_color, whisker_color):
-        for patch in box['boxes']:
-            patch.set_facecolor(facecolor)
-            patch.set_edgecolor(edgecolor)
-            patch.set_linewidth(linewidth)
-        for flier in box['fliers']:
-            flier.set(marker='o', markerfacecolor=flier_color, alpha=0.5)
-        for median in box['medians']:
-            median.set(color=median_color, linewidth=2)
-        for whisker in box['whiskers']:
-            whisker.set(color=whisker_color, linewidth=1, linestyle='--')
+    def style_boxplot(box, facecolor, edgecolor, linewidth, flier_color, median_color, whisker_color):
+          for patch in box['boxes']:
+              patch.set_facecolor(facecolor)
+              patch.set_edgecolor(edgecolor)
+              patch.set_linewidth(linewidth)
+          for flier in box['fliers']:
+              flier.set(marker='o', markerfacecolor=flier_color, alpha=0.5)
+          for median in box['medians']:
+              median.set(color=median_color, linewidth=2)
+          for whisker in box['whiskers']:
+              whisker.set(color=whisker_color, linewidth=1, linestyle='--')
 
-    # Apply styling
-  style_boxplot(box4, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
-  style_boxplot(box5, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
-  style_boxplot(box6, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
-  st.pyplot(fig2)
+      # Apply styling
+    style_boxplot(box4, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
+    style_boxplot(box5, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
+    style_boxplot(box6, '#6E66CC', 'black', 1, '#FF7BAC', '#FFD000', 'black')
+    #st.pyplot(fig2)
+    plt.savefig('comparison_indicators_2005_2023.svg',format='svg',bbox_inches = "tight")
+
+  st.image("comparison_indicators_2005_2023.svg", use_container_width =True)
 
 
 
