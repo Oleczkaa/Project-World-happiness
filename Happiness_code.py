@@ -1243,7 +1243,9 @@ if page == pages[3] :
             fontsize=12)
   plt.title("Decision Tree Visualization")
   # st.pyplot(plt)
-  st.image("decisiontree.png", use_container_width =True)
+  
+  plt.savefig('decisiontree.svg',format='svg',bbox_inches = "tight")
+  st.image("decisiontree.svg", use_container_width =True)
 
   st.markdown("---")
 
