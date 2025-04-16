@@ -142,13 +142,19 @@ if page == pages[2] :
     "Healthy life expectancy at birth", "Freedom to make life choices",
     "Generosity", "Perceptions of corruption", "Positive affect", "Negative affect"]
 
-  plt.figure(figsize=(14, 8))
-  sns.boxplot(data=df_all[numerical_columns], palette="Set2")
-  plt.title("Box Plot for Multiple Numerical Variables")
-  plt.xlabel("Variables")
-  plt.ylabel("Values")
-  plt.xticks(rotation=45)
-  st.pyplot(plt)
+  import os
+  if not os.path.exists("boxplot_multiple_numerical_variables.svg"):
+    print("\nGenerating new picture of decision tree")
+    plt.figure(figsize=(14, 8))
+    sns.boxplot(data=df_all[numerical_columns], palette="Set2")
+    plt.title("Box Plot for Multiple Numerical Variables")
+    plt.xlabel("Variables")
+    plt.ylabel("Values")
+    plt.xticks(rotation=45)
+    #st.pyplot(plt)
+    plt.savefig('boxplot_multiple_numerical_variables.svg',format='svg',bbox_inches = "tight")
+
+  st.image("boxplot_multiple_numerical_variables.svg", use_container_width =True)
 
   st.markdown("""
     ### Initial Observations
