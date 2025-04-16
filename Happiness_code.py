@@ -489,49 +489,53 @@ if page == pages[2] :
   bottom_10 = df_2023_sorted.tail(10)
 
   #Diagram in Seaborn
+  if not os.path.exists("top_bottom_countries_life_ladder.svg"):
+    print("\nGenerating new picture of decision tree")
+    fig, axes = plt.subplots(1, 2, figsize=(14, 6))
 
-  fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+    #show Barplot Top 10
+    sns.barplot(
+        ax=axes[0],
+        data = top_10,
+        x='Life Ladder',
+        y='Country name',
+        hue='Continent',
+        palette = continent_colors
+    )
 
-  #show Barplot Top 10
-  sns.barplot(
-      ax=axes[0],
-      data = top_10,
-      x='Life Ladder',
-      y='Country name',
-      hue='Continent',
-      palette = continent_colors
-  )
+    # delet line top and right
+    axes[0].spines['top'].set_visible(False)
+    axes[0].spines['right'].set_visible(False)
+    axes[0].spines['bottom'].set_visible(False)
 
-  # delet line top and right
-  axes[0].spines['top'].set_visible(False)
-  axes[0].spines['right'].set_visible(False)
-  axes[0].spines['bottom'].set_visible(False)
+    axes[0].set_title("Top 10 Countries \n by Life Ladder (2023)\n\n", fontsize = 16, fontweight = "bold")
+    axes[0].set_xlabel("Life Ladder", fontsize = 12)
+    axes[0].set_ylabel("Countries", fontsize = 12)
+    axes[0].legend(loc="upper center", bbox_to_anchor=(0.5, 1.1), ncol=4)
+    axes[0].grid(True, which='major', axis='x', linestyle='--', linewidth=0.5)
+    axes[0].set_axisbelow(True)
 
-  axes[0].set_title("Top 10 Countries \n by Life Ladder (2023)\n\n", fontsize = 16, fontweight = "bold")
-  axes[0].set_xlabel("Life Ladder", fontsize = 12)
-  axes[0].set_ylabel("Countries", fontsize = 12)
-  axes[0].legend(loc="upper center", bbox_to_anchor=(0.5, 1.1), ncol=4)
-  axes[0].grid(True, which='major', axis='x', linestyle='--', linewidth=0.5)
-  axes[0].set_axisbelow(True)
+    #show Barplot Bottom 10
+    sns.barplot(
+        ax=axes[1],
+        data = bottom_10,
+        x='Life Ladder',
+        y='Country name',
+        hue='Continent',
+        palette= continent_colors
+    )
+    axes[1].set_title("10 Lowest-Ranked Countries \n by Life Ladder (2023)\n\n", fontsize = 16, fontweight = "bold")
+    axes[1].set_xlabel("Life Ladder", fontsize = 12)
+    axes[1].set_ylabel("Countries", fontsize = 12);
+    axes[1].legend(loc="upper center", bbox_to_anchor=(0.5, 1.1), ncol=4)
+    axes[1].grid(True, which='major', axis='x', linestyle='--', linewidth=0.5)
+    axes[1].set_axisbelow(True)
 
-  #show Barplot Bottom 10
-  sns.barplot(
-      ax=axes[1],
-      data = bottom_10,
-      x='Life Ladder',
-      y='Country name',
-      hue='Continent',
-      palette= continent_colors
-  )
-  axes[1].set_title("10 Lowest-Ranked Countries \n by Life Ladder (2023)\n\n", fontsize = 16, fontweight = "bold")
-  axes[1].set_xlabel("Life Ladder", fontsize = 12)
-  axes[1].set_ylabel("Countries", fontsize = 12);
-  axes[1].legend(loc="upper center", bbox_to_anchor=(0.5, 1.1), ncol=4)
-  axes[1].grid(True, which='major', axis='x', linestyle='--', linewidth=0.5)
-  axes[1].set_axisbelow(True)
+    plt.tight_layout()
+    #st.pyplot(plt)
+    plt.savefig('top_bottom_countries_life_ladder.svg',format='svg',bbox_inches = "tight")
 
-  plt.tight_layout()
-  st.pyplot(plt)
+  st.image("top_bottom_countries_life_ladder.svg", use_container_width =True)
 
   st.markdown("""
     ### 🧠 Conclusion
