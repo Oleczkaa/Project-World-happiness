@@ -1234,17 +1234,18 @@ if page == pages[3] :
   # ================================
   # Simpler Visualization of the Decision Tree
   # ================================
-
-  plt.figure(figsize=(12, 8))
-  plot_tree(decision_tree_model,
+  import os
+  if not os.path.exists("decisiontree.svg"):
+    plt.figure(figsize=(12, 8))
+    plot_tree(decision_tree_model,
             feature_names=X_train_encoded.columns,
             filled=True,
             rounded=True,
             fontsize=12)
-  plt.title("Decision Tree Visualization")
-  # st.pyplot(plt)
-  
-  plt.savefig('decisiontree.svg',format='svg',bbox_inches = "tight")
+    plt.title("Decision Tree Visualization")
+    # st.pyplot(plt)
+    plt.savefig('decisiontree.svg',format='svg',bbox_inches = "tight")
+
   st.image("decisiontree.svg", use_container_width =True)
 
   st.markdown("---")
