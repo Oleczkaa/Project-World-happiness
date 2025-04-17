@@ -12,7 +12,7 @@ df = pd.read_csv("df.csv")
 
 st.title("Project: World Happiness")
 st.sidebar.title("Table of contents")
-pages=["Project Description","Presentation of Data", "Data Vizualization", "Modelling"]
+pages=["Project Description","Presentation of Data", "Data Vizualization", "Modelling", "Model Prediction"]
 page=st.sidebar.radio("Go to", pages)
 
 import matplotlib.pyplot as plt
@@ -1514,6 +1514,88 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression
 
+import streamlit as st
+import pandas as pd
+import numpy as np
+import joblib
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LinearRegression
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+import matplotlib.pyplot as plt
+import seaborn as sns
+import os
 
- 
+if page == pages[4]:
+    st.write("")
+    st.write("")
     
+    df_all['filled_percentage'] = df_all.notna().sum(axis=1) / len(df_all.columns)
+    rows_below_50 = df_all[df_all['filled_percentage'] < 0.5]
+    df_all = df_all.dropna()
+
+    delete_col = ["year", 'Continent', 'Country name', 'filled_percentage', 'People per square kilometer', 'Population in millions', 'Area in square kilometer', "Area Code (M49)"]
+    df_clean = df_all.drop(delete_col, axis=1)
+
+    feats = df_clean.drop('Life Ladder', axis=1)
+    target = df_clean['Life Ladder']
+    X_train, X_test, y_train, y_test = train_test_split(feats, target, test_size=0.2, random_state=42)
+
+    # Scaling the features
+    columns_to_scale = [
+        "Log GDP per capita", "Social support", "Healthy life expectancy at birth", 
+        "Freedom to make life choices", "Generosity", "Perceptions of corruption", 
+        "Positive affect", "Negative affect"
+    ]
+    scaler = StandardScaler()
+    X_train_scaled_columns = scaler.fit_transform(X_train[columns_to_scale])
+    X_test_scaled_columns = scaler.transform(X_test[columns_to_scale])
+
+    X_train[columns_to_scale] = X_train_scaled_columns
+    X_test[columns_to_scale] = X_test_scaled_columns
+
+    # One-hot encode 'Region'
+    X_train_encoded = pd.get_dummies(X_train, columns=['Region'], drop_first=True)
+    X_test_encoded = pd.get_dummies(X_test, columns=['Region'], drop_first=True)
+    X_test_encoded = X_test_encoded.reindex(columns=X_train_encoded.columns, fill_value=0)
+
+    # Load saved models
+    linear_model = joblib.load('newest_linear_model.pkl')
+    decision_tree_model = joblib.load('newest_decision_tree_model.pkl')
+    rf_model = joblib.load('newest_rf_model.pkl')
+
+    # Create dropdown for model selection
+    model_option = st.selectbox(
+        "Choose a Model for Prediction", 
+        ["Linear Regression", "Decision Tree", "Random Forest"]
+    )
+
+    # Country selection
+    country = st.selectbox("Select a Country", df_all['Country name'].unique())
+
+    # Get the country's data for prediction
+    country_data = df_all[df_all['Country name'] == country].drop(delete_col, axis=1)
+
+    # Scale the country data and encode it
+    country_data_scaled = scaler.transform(country_data[columns_to_scale])
+    country_data[columns_to_scale] = country_data_scaled
+
+    country_data_encoded = pd.get_dummies(country_data, columns=['Region'], drop_first=True)
+    country_data_encoded = country_data_encoded.reindex(columns=X_train_encoded.columns, fill_value=0)
+
+    # Model prediction
+    if model_option == "Linear Regression":
+        prediction = linear_model.predict(country_data_encoded)
+    elif model_option == "Decision Tree":
+        prediction = decision_tree_model.predict(country_data_encoded)
+    elif model_option == "Random Forest":
+        prediction = rf_model.predict(country_data_encoded)
+
+    
+    # Display the prediction with larger font size
+    prediction_text = f"Predicted Life Ladder for {country} using {model_option}: {prediction[0]:.2f}"
+
+    # Use st.markdown to apply custom styling (larger font size)
+    st.markdown(f"<h1 style='text-align: center; color: #333333;'>{prediction_text}</h1>", unsafe_allow_html=True)
