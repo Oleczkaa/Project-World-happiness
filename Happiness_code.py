@@ -1505,7 +1505,9 @@ if page == pages[3] :
 
     - **Random Forest** has the highest performance on the test data, with a perfect fit on the training set (which may indicate overfitting), but it still generalizes exceptionally well.
 
-    In general, if we want a model with high interpretability and less overfitting, Linear Regression might be the better choice. If predictive power is the most important, Random Forest seems to be the top performer, with the highest R² on the test set.
+    In general, if we want a model with high interpretability and less overfitting, Linear Regression might be the better choice. If predictive power is the most important, Random Forest seems to be the top performer, with the highest R² ("coefficient of determination" - 
+
+    it measures how well a model's predictions match the real data.) on the test set.
     """)
 
 
@@ -1531,7 +1533,7 @@ import os
 if page == pages[4]:
     st.write("")
     st.write("")
-    
+
     df_all['filled_percentage'] = df_all.notna().sum(axis=1) / len(df_all.columns)
     rows_below_50 = df_all[df_all['filled_percentage'] < 0.5]
     df_all = df_all.dropna()
