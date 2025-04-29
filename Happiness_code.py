@@ -117,7 +117,7 @@ if page == pages[1] :
   st.dataframe(df_all.head(10))
   st.write(df_all.shape)
 
-  st.markdown("Summary Statiscis")
+  st.markdown("Summary Statistics")
   st.dataframe(df_all.describe())
   if st.checkbox("Show NA") :
     st.dataframe(df_all.isna().sum())
@@ -707,7 +707,7 @@ if page == pages[2] :
     ### 🌍 Global Evolution of Life Ladder
 
     How has global happiness evolved over time?  
-    Let's explore the changes in the **Life Ladder** scores from 2005 to 2023 to understand the broader trends in global life satisfaction.
+    Let's explore the changes in the **Life Ladder** scores from 2006 to 2023 to understand the broader trends in global life satisfaction.
     """)
   #AVERAGE LIFE LADDER BY CONTINENT
 
